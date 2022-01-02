@@ -5,5 +5,5 @@ export const LoopType = {
 }
 
 export const http = {
-    url: 'http://localhost:3500/api/'
+    url: 'https://smusic-be.vercel.app/api/'
 }
