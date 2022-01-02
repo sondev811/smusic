@@ -1,0 +1,79 @@
+@import '../../scss/mixin.scss';
+.user {
+    position: fixed;
+    top: 0;
+    right: 2rem;
+    z-index: 1;
+    width: auto;
+    box-sizing: border-box;
+    padding: 1rem 0;
+    @include mobile {
+        right: 1rem;
+    }
+    @include flex(center, right);
+    .user__name {
+        background-color: rgba(0,0,0,.7);
+        @include mobile {
+            background-color: transparent!important;
+        }
+        border: 0;
+        border-radius: 23px;
+        transition: .3s all ease;
+        color: #fff;
+        @include flex(center, center);
+        cursor: pointer;
+        position: relative;
+        font-weight: 600;
+        &--info {
+            @include mobile {
+                display: none;
+            }
+            @include flex(center, center);
+            div {
+                @include flex(center, center);
+            }
+        }
+        svg {
+            margin-left: 5px;
+            margin-top: 4px;
+        }
+        &--mobile {
+            font-size: 32px;
+        }
+        &--child {
+            @include mobile {
+                top: 100%;
+                width: 177%;
+            }
+            position: absolute;
+            top: 125%;
+            width: 100%;
+            right: 0;   
+            display: none;
+            background-color: #282828;
+            border-radius: 4px;
+            box-shadow: 0 16px 24px rgba(0, 0, 0, .3), 0 6px 8px rgba(0, 0, 0, .2);
+            ul {
+                margin: 0;
+                padding: 4px;
+                li {
+                    display: block;
+                    padding: 12px;
+                    font-size: 14px;
+                    color: #fff;
+                    transition: .3s all;
+                    border-radius: 4px;
+                }
+                li:hover {
+                    background-color: rgba(255,255,255,.1);
+                }
+            }
+        }
+        .active {
+            display: block;
+        }
+    }
+    .active-user {
+        background-color: #282828;
+    }
+}

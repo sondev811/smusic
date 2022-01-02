@@ -1,13 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from './components/Home/Home';
+import Login from './components/Login/Login';
+import NotFound from './components/NotFound/NotFound';
+import Queue from './components/Queue/Queue';
+import Search from './components/Search/Search';
+import Signup from './components/Signup/Signup';
 import './index.css';
-import App from './App';
+import PrivateRoute from './middleware/private.route';
 import reportWebVitals from './reportWebVitals';
-
+import store from './store';
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <Routes>
+          <Route exact path='/' element={<PrivateRoute/>}>
+            <Route exact path="" element={<Home />}/> 
+            <Route exact path="search" element={<Search />}/>
+            <Route exact path="queue" element={<Queue />} />
+          </Route>
+        <Route exact path='/signup' element={<Signup/>}/>
+        <Route exact path='/login' element={<Login/>}/>
+        <Route path='*' element={<NotFound/>}/>
+      </Routes>
+    </Provider>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 

@@ -1,0 +1,80 @@
+@import '../../scss/mixin.scss';
+.login {
+    &__logo {
+        padding: 2rem;
+        border-bottom: 1px solid #d9dadc;
+        font-size: 2rem;
+        font-weight: 600;
+        padding: 1.5rem;
+        @include flex(center, center);
+    }
+    &__form {
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 2rem 0;
+        border-bottom: 1px solid #d9dadc;
+        label {
+            padding-bottom: .5rem;
+            font-weight: 600;
+        }
+        &--items {
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           margin-bottom: 10px;
+        }
+        input {
+            height: 20px;
+            padding: 6px 12px;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #d9dadc;
+            border-radius: 0;
+            display: block;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #222326;
+        }
+    }
+    button {
+        margin-top: 10px;
+        width: 100%;
+        color: #fff;
+        transition: .3s all;
+        background-color: #15883e;
+        padding: 16px 14px 18px;
+        font-size: 14px;
+        line-height: 1;
+        border-radius: 500px;
+        padding: 16px 48px 18px;
+        transition-property: background-color,border-color,color,box-shadow,filter;
+        transition-duration: .3s;
+        border-width: 0;
+        letter-spacing: 2px;
+        min-width: 160px;
+        text-transform: uppercase;
+        white-space: normal;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #1db954;
+    }
+    .sign-up {
+        p {
+            font-weight: 600;
+        }
+        a {
+            padding-left: .5rem;
+            color: #15883e;
+            transition: .3s all;
+            font-weight: 600;
+        }
+        a:hover {
+            color: #1db954;;
+        }
+        max-width: 450px;
+        margin: 0 auto;
+        padding: 1rem 0;
+        @include flex(center, center);
+    }
+}

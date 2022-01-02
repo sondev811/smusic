@@ -1,0 +1,64 @@
+@import '../../../scss/mixin.scss';
+.header {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 15rem;
+    height: 100%;
+    z-index: 2;
+    background-color: #000;
+    @include tablet {
+        z-index: 1111;
+        height: 65px;
+        width: 100%;
+        bottom: 0!important;
+        left: 0;
+    }
+    &__logo {
+        font-size: 1.7rem;
+        font-weight: 600;
+        padding: 1.5rem;
+        @include flex(center, left);
+        @include tablet {
+          display: none;
+        }
+    }
+    nav {
+        padding: 0 10px;
+        @include tablet {
+            @include flex(center, space-around);
+        }
+        .active {
+            background-color: #121212;
+            color: #fff;
+        }
+        a {
+            @include tablet {
+                border-radius: 0;
+                padding: .5rem;
+                flex-direction: column;
+                text-align: center;
+                background-color: transparent!important;
+            }
+            display: flex;
+            list-style: none;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #a7a7a7;
+            font-weight: 600;
+            padding: .7rem 1.5rem;
+            transition: .3s all;
+            span {
+                @include tablet {
+                    padding-right: 0;
+                }
+                font-size: 1.5rem;
+                line-height: 0px;
+                padding-right: 1rem;
+            }
+            &:hover {
+                color: #fff;
+            }
+        }
+    }
+}

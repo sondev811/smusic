@@ -1,0 +1,19 @@
+@import '../../scss/mixin.scss';
+.layout-container {
+    color: #fff;
+    .main-container {
+        @include tablet {
+           width: 100%;
+           padding: 1rem;
+           left: 0;
+        }
+        background-color: #121212;
+        position: fixed;
+        top: 0;
+        height: 100%;
+        padding: 1.3rem 2rem;
+        left: 15rem;
+        box-sizing: border-box; 
+        width: calc(100% - 15rem);
+    }
+}

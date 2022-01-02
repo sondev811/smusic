@@ -1,0 +1,173 @@
+@import '../../scss/mixin.scss';
+.queue {
+    &__header {
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -.04em;
+            line-height: 28px;
+            text-transform: none;
+            margin-top: 0px;
+            @include mobile {
+                margin-top: 5px;
+            }
+        }
+    }
+    &__list {
+        margin-top: 1.5rem;
+        max-height: 400px;
+        overflow-y: auto;
+        @include tablet {
+            max-height: 465px;
+        }
+        &>div {
+            @include flex(center, space-between);
+            padding-right: 1.5rem;
+            @include tablet {
+                padding-right: 0;
+            }
+            @include mobile {
+                margin-bottom: 5px;
+            }
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: .3s all ease;
+            &:hover {
+                background: #181818;
+                .queue__list--item--name  {
+                    color: #1db954;
+                }
+            }
+            border-radius: 4px;
+        }
+        &--remove {
+            font-size: 23px;
+            @include flex(center, center);
+            a {
+                font-size: 21px;
+                color: #fff;
+            }
+            svg {
+                transition: .3s all ease;
+                margin-right: 10px;
+                @include mobile {
+                    margin-right: 5px;
+                }
+            }
+            svg:hover {
+                color: #1db954;
+            }
+        }
+        .non-remove {
+            pointer-events: none;
+            opacity: .3;
+        }
+        &::-webkit-scrollbar-track
+        {
+            border: 1px solid #070707;
+            background-color: #121212;
+        }
+
+        &::-webkit-scrollbar
+        {
+            width: 7px;
+            background-color: #121212;
+        }
+
+        &::-webkit-scrollbar-thumb
+        {
+            background-color: #000000;	
+        }
+        &--item {
+            @include flex(center, left);
+            &--name {
+                transition: .3s all;
+                div:first-child {
+                    margin-bottom: 3px;
+                    @include mobile {
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        width: 139px;
+                    }
+                }
+                div:last-child {
+                    font-size: 14px;;
+                }
+            }
+            &--icon {
+                img {
+                    display: none;
+                    width: 16px;
+                }
+                span {
+                    @include flex(center, center);
+                }
+                svg {
+                    font-size: 22px;
+                    transition: .3s all;
+                    &:hover {
+                        color: #1db954;
+                    }
+                }
+            }
+            &--thumb {
+                padding: 0!important;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 70px;
+                img {
+                    width: 80px;
+                    @include mobile {
+                        width: 70px;
+                    }
+                }
+            }
+            &>div {
+                @include mobile {
+                    padding: 0 .8rem;
+                }
+                padding: 0 1.5rem;
+            }
+        }
+        .active-item {
+            background-color: rgba(255,255,255,.1);
+        }
+        .playing {
+            .play-icon {
+                display: none;
+            }
+            .image-loading {
+                display: none;
+            }
+            .image-play {
+                display: block;
+            }
+            color: #1db954;
+        }
+        .downloading {
+            .play-icon {
+                display: none;
+            }
+            .image-play {
+                display: none;
+            }
+            .image-loading {
+                display: block;
+            }
+        }
+    }
+
+    @include tablet {
+        .active-mobile-queue {
+            max-height: 360px;
+        }
+    }
+
+    @include mobile {
+        .active-mobile-queue {
+            max-height: 290px;
+        }
+    }
+}
