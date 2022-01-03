@@ -279,7 +279,7 @@ const Player = (props) => {
                 currentMusic && currentMusic.youtubeId ?
                 <div>
                     <audio id="musicPlayer" ref={musicPlayer} controls autoPlay preload="auto" style={{display: 'none'}}> 
-                        <source src={`http://localhost:3500/api/stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
+                        <source src={`https://smusic-be.vercel.app/api/stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
                     </audio>
                     <div className='player__desktop'>
                         <div className={`musicPlayer ${isOpenPlayer ? 'active-mobile' : ''}`} >
