@@ -29,7 +29,8 @@ function Signup(props) {
     const handleChangeConfirmPassword = (event) => setConfirmPassword(event.target.value);
     const handleChangeName = (event) => setName(event.target.value);
 
-    const signUp = async () => {
+    const signUp = async (e) => {
+        e.preventDefault();
         if (!userName || !password || !confirmPassword || !name) {
             setErrors({
                 error : 'Email, Password, Confirm password, Name is required',
@@ -74,6 +75,7 @@ function Signup(props) {
         <div className='login'>
             <div className='login__logo'><RiNeteaseCloudMusicLine/>SMusic</div>
             <div className='login__form'>
+                <form onSubmit={signUp}>
                     <div className='login__form--items'> 
                         <label htmlFor="username">
                         Email hoặc tên đăng nhập *
@@ -133,7 +135,8 @@ function Signup(props) {
                     <div className='login__form--error'>
                         { errors.error }
                     </div>
-                    <button onClick={signUp}>Đăng ký</button>
+                    <button>Đăng ký</button>
+                </form>
             </div>
             <div className='sign-up'>
                 <p>

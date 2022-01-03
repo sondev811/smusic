@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MdPlaylistAdd } from "react-icons/md";
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import { getTrending } from '../../services';
-import './Home.scss';
-import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setLoadingAction } from '../../actions/loading.action';
-import { playerStore, queuesStore } from '../../features';
-import { setQueueItemAction } from '../../actions/queue.action';
+import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
+import { useAppDispatch } from '../../hooks';
+import { getTrending } from '../../services';
 import musicService from '../../services/music.service';
+import './Home.scss';
 
 function Home(props) {
     const [trendingData, setTrendingData] = useState([]);
@@ -16,8 +14,7 @@ function Home(props) {
     const [numberOrder, setNumberOrder] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(1);
     const dispatch = useAppDispatch();
-    const queueListStore = useAppSelector(queuesStore);
-    const isOpenPlayer = useAppSelector(playerStore);
+    
     useEffect(() => {
         const getTrendingYoutube = async () => {
             const response = await getTrending();
@@ -39,24 +36,18 @@ function Home(props) {
 
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
-        if (queueListStore.find(item => item.youtubeId === data.youtubeId)) {
-            return;
-        }
-        const queueListTemp = [...queueListStore, data];
-        dispatch(setQueueItemAction(queueListTemp));
         dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
         dispatch(setLoadingAction({isLoading: false}));
         dispatch(setQueueItemAction(music.result.queueList));    
+        dispatch(setCurrentMusicAction(music.result.currentMusic));
     }
 
     const handleVideoInfo = (data) => {
         return {
             audioThumb: `https://img.youtube.com/vi/${data.contentDetails.videoId}/0.jpg`,
             authorName: data.snippet.videoOwnerChannelTitle,
-            ggDriveId: '',
             name: data.snippet.title,
-            nameFormatted: '',
             youtubeId: data.contentDetails.videoId
         }
     }
@@ -96,10 +87,10 @@ function Home(props) {
                     <h3>Thịnh hành</h3>
                 </div>
             </div>
-            <div className={`trending__list ${isOpenPlayer ? 'active-mobile-queue' : ''}`}>
+            <div className='trending__list'>
             {  trendingData && trendingData.map((element, i) => {
                 return(
-                    <div className='trending__list--item' key={i}>
+                    <div className='trending__list--item' key={i} onClick={() => addQueueList(element)}>
                         <div>
                             <div className='trending__list--item--icon'>
                                 { numberOrder > 0 ? formatNumber(numberOrder * itemsPerPage + i + 1) : formatNumber(i + 1)}
@@ -111,9 +102,6 @@ function Home(props) {
                                 <div>{element.snippet.title}</div> 
                                 <div>{element.snippet.channelTitle}</div>
                             </div>
-                        </div>
-                        <div className='trending__list--item--action'>
-                            <span onClick={() => addQueueList(element)}><MdPlaylistAdd/></span>
                         </div>
                     </div>
                 )})

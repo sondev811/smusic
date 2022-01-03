@@ -1,9 +1,13 @@
 @import '../../scss/mixin.scss';
 .search {
-    // display: inline-block;
+    @include mobile {
+        padding: 1rem;
+        padding-bottom: 0;
+        padding-top: 17px;
+    }
     input {
         @include mobile {
-            width: 160px;
+            width: 150px;
         }
         border-radius: 500px;
         color: #000;
@@ -57,12 +61,16 @@
         }
     }
     &__list {
-        margin-top: 2.3rem;
-        max-height: 420px;
+        margin-top: 1.3rem;
+        max-height: 56vh;
         overflow-y: auto;
         @include tablet {
             margin-top: 1.5rem;
             max-height: 450px;
+        }
+        @include mobile {
+            margin-top: 1rem;
+            min-height: 68vh;
         }
         &::-webkit-scrollbar-track
         {
@@ -113,7 +121,7 @@
                         text-overflow: ellipsis;
                         white-space: nowrap;
                         overflow: hidden;
-                        width: 155px;
+                        width: 170px;
                     }
                 }
                 div:last-child {

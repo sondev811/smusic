@@ -10,6 +10,9 @@
     }
     &__form {
         max-width: 450px;
+        @include mobile {
+            max-width: 320px;
+        }
         margin: 0 auto;
         padding: 2rem 0;
         border-bottom: 1px solid #d9dadc;

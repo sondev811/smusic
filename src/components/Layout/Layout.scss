@@ -7,6 +7,9 @@
            padding: 1rem;
            left: 0;
         }
+        @include mobile {
+            padding: 0;
+        }
         background-color: #121212;
         position: fixed;
         top: 0;

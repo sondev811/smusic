@@ -1,6 +1,14 @@
 @import '../../scss/mixin.scss';
 .queue {
+    @include mobile {
+        padding: 1rem 0;
+        padding-bottom: 0;
+        padding-top: 17px;
+    }
     &__header {
+        @include mobile {
+            padding: 0 1rem;
+        }
         h3 {
             font-size: 24px;
             font-weight: 700;
@@ -15,10 +23,17 @@
     }
     &__list {
         margin-top: 1.5rem;
-        max-height: 400px;
+        max-height: 59vh;
         overflow-y: auto;
-        @include tablet {
-            max-height: 465px;
+        @include tablet{
+            min-height: 68vh;
+            margin-top: 1rem;
+            padding: 0 .3rem;
+        }
+        @include mobile{
+            min-height: 68vh;
+            margin-top: 1rem;
+            padding: 0 .3rem;
         }
         &>div {
             @include flex(center, space-between);
@@ -36,6 +51,11 @@
                 background: #181818;
                 .queue__list--item--name  {
                     color: #1db954;
+                }
+                @include tablet {
+                    .queue__list--item--name  {
+                        color: #fff;
+                    }
                 }
             }
             border-radius: 4px;
@@ -159,15 +179,4 @@
         }
     }
 
-    @include tablet {
-        .active-mobile-queue {
-            max-height: 360px;
-        }
-    }
-
-    @include mobile {
-        .active-mobile-queue {
-            max-height: 290px;
-        }
-    }
 }

@@ -1,8 +1,11 @@
 @import '../../scss/mixin.scss';
 .trending {
+    @include mobile {
+        padding: 1.3rem 1rem;
+        padding-bottom: 0;
+    }
     &__header {
         @include flex(center, left);
-        margin-top: 4px;
         h3 {
             font-size: 24px;
             margin: 0;
@@ -28,10 +31,13 @@
     }
     &__list {
         margin-top: 1rem;
-        max-height: 425px;
+        max-height: 59vh;
         overflow-y: auto;
         @include tablet {
-            max-height: 470px;
+            min-height: 70vh;
+        }
+        @include mobile {
+            min-height: 68vh;
         }
         &::-webkit-scrollbar-track
         {
@@ -81,7 +87,7 @@
                         text-overflow: ellipsis;
                         white-space: nowrap;
                         overflow: hidden;
-                        width: 155px;
+                        width: 170px;
                     }
                 }
                 div:last-child {
@@ -125,18 +131,6 @@
         }
         .active-item {
             background-color: rgba(255,255,255,.1);
-        }
-    }
-
-    @include tablet {
-        .active-mobile-queue {
-            max-height: 360px;
-        }
-    }
-
-    @include mobile {
-        .active-mobile-queue {
-            max-height: 300px;;
         }
     }
 }

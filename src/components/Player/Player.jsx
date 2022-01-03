@@ -4,7 +4,7 @@ import { BsChevronCompactDown, BsChevronDown, BsFillPlayFill, BsFillVolumeMuteFi
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { setPlayerAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
-import { LoopType } from "../../constants/player";
+import { colors, LoopType } from "../../constants/player";
 import { currentMusicStore, playerStore, queuesStore, useOutside } from '../../features';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import musicService from "../../services/music.service";
@@ -13,8 +13,8 @@ import './Player.scss';
 const Player = (props) => {
     const musicPlayer = useRef(null);
     const totalDuration = useRef(null);
-    const progressBar = useRef(null);
     const playbackProgress = useRef(null);
+    const playbackProgressMobile = useRef(null);
     const volumeBar = useRef(null);
     const loopTypeRef = useRef(LoopType.None);
     const queuesListRef = useRef([]);
@@ -31,25 +31,23 @@ const Player = (props) => {
 
     const [isActiveVolume, setActiveVolume] = useState(false);
     const [volumeValue, setVolumeValue] = useState(50);
-    const [durationValue, setDurationValue] = useState({
-        minutes: '00',
-        seconds: '00'
-    });
     const [isPlaying, setPlay] = useState(false);
     const [isClickOnVolumeBar, setClickOnVolumeBar] = useState(false);
     const [loopType, setLoopType] = useState(LoopType.None);
     const [activeNext, setActiveNext] = useState(false);
     const [activePrev, setActivePrev] = useState(false);
-
+    const [activeVolumeMobile, setActiveVolumeMobile] = useState(true);
+    const [color, setColor] = useState('rgba(184, 72, 56, .5)');
+    
     useEffect(() => {
-
+        setColor(colors[Math.floor(Math.random() * colors.length)]);
         const progressEndMusic = async(music) => {
             await musicService.updateCurrentMusic(music.youtubeId);
             dispatch(setCurrentMusicAction(music));
         }
 
         const ended = async() => {
-            const indexCurrentMusic = queuesListRef.current.findIndex(item => item.ggDriveId === currentMusic.ggDriveId);
+            const indexCurrentMusic = queuesListRef.current.findIndex(item => item.youtubeId === currentMusic.youtubeId);
             if (indexCurrentMusic === queuesListRef.current.length - 1) {
                 if (loopTypeRef.current === LoopType.All) {
                     const nextMusic = queuesList[0];
@@ -58,21 +56,27 @@ const Player = (props) => {
                 return;
             }
             const nextMusic = queuesListRef.current[indexCurrentMusic + 1];
-            if (!nextMusic.ggDriveId) return;
+            if (!nextMusic.youtubeId) return;
             progressEndMusic(nextMusic);
         }
 
         const setDuration = () => {
             if (!musicPlayer.current) return;
-            const duration = formatDuration(musicPlayer.current.duration);
+            const duration = formatDuration(parseInt(currentMusic.videoLength));
             totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
         }
 
+        const minuteDom = document.getElementById('minutes');
+        const secondDom = document.getElementById('seconds');
         const updateProgressBar = () => {
-            setDurationValue(formatDuration(player.currentTime));
-            const percentage = Math.floor((100 / player.duration) * player.currentTime);
-            if(!playbackProgress || !playbackProgress.current) return;
+            const {minutes, seconds} = formatDuration(player.currentTime);
+            minuteDom.innerHTML = minutes;
+            secondDom.innerHTML = seconds;
+            const percentage = Math.floor((100 / parseInt(currentMusic.videoLength)) * player.currentTime);
+            if(!playbackProgress || !playbackProgress.current 
+                || !playbackProgressMobile || !playbackProgressMobile.current) return;
             playbackProgress.current.style.width = percentage + '%';
+            playbackProgressMobile.current.style.width = percentage + '%';
         }
 
         const play = () => {
@@ -111,7 +115,7 @@ const Player = (props) => {
 
     useEffect(() => {
         const checkNextPrev = () => {
-            const index = queuesList.findIndex(item => item.ggDriveId === currentMusic.ggDriveId);
+            const index = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
             if (index < queuesList.length - 1) {
                 setActiveNext(true);
             } else {
@@ -136,12 +140,11 @@ const Player = (props) => {
 
     const handleProgressBar = event => {
         const player = musicPlayer.current;
-        const progress = progressBar.current;
         const progressPlay = playbackProgress.current;
-        if (!player || !progress || !progressPlay) return;
-        const position = event.clientX - progress.getBoundingClientRect().left;
-        const percent = position / progress.offsetWidth;
-        player.currentTime = percent * player.duration;
+        if (!player || !progressPlay) return;
+        const position = event.clientX - progressPlay.getBoundingClientRect().left;
+        const percent = position / progressPlay.offsetWidth;
+        player.currentTime =percent * player.currentTime;
         progressPlay.style.width = Math.floor(percent * 100) + '%';
     }
 
@@ -246,27 +249,37 @@ const Player = (props) => {
     }
 
     const nextPrevBtn = async(type) => {
-        const index = queuesListRef.current.findIndex(item => item.ggDriveId === currentMusic.ggDriveId);
-        let nextMusic =null;
+        const index = queuesListRef.current.findIndex(item => item.youtubeId === currentMusic.youtubeId);
+        let nextMusic = null;
         if (type === 'next') {
             nextMusic = queuesListRef.current[index + 1];
         } else {
             nextMusic = queuesListRef.current[index - 1];
         }
-        if (!nextMusic.ggDriveId) {
+        if (!nextMusic.youtubeId) {
             return;
         }
         await musicService.updateCurrentMusic(nextMusic.youtubeId);
+        setColor()
         dispatch(setCurrentMusicAction(nextMusic));
+    }
+
+    const onClickVolumeMobile = () => {
+        setActiveVolumeMobile(!activeVolumeMobile);
+        if (!activeVolumeMobile) {
+            musicPlayer.current.volume = 0.3; 
+            return;
+        }
+        musicPlayer.current.volume = 0; 
     }
 
     return (
         <div className='player'>
             {
-                currentMusic && currentMusic.ggDriveId ?
+                currentMusic && currentMusic.youtubeId ?
                 <div>
                     <audio id="musicPlayer" ref={musicPlayer} controls autoPlay preload="auto" style={{display: 'none'}}> 
-                        <source src={`http://docs.google.com/uc?export=open&id=${currentMusic.ggDriveId}`} type="audio/mpeg" /> 
+                        <source src={`http://localhost:3500/api/stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
                     </audio>
                     <div className='player__desktop'>
                         <div className={`musicPlayer ${isOpenPlayer ? 'active-mobile' : ''}`} >
@@ -276,14 +289,14 @@ const Player = (props) => {
                             <p className="audio-name">{currentMusic.name}</p>   
                             <p className="author-name">{currentMusic.authorName}</p>
                             <div className="background"></div>
-                            <div id='progressBar' ref={progressBar} onMouseDown={handleProgressBar}>
-                                <div id="playbackProgress" ref={playbackProgress}></div>
+                            <div id='progressBar' >
+                                <div id="playbackProgress" ref={playbackProgress} onMouseDown={handleProgressBar}></div>
                             </div>
                             <div className="music-duration">
                                 <div>
-                                    <span id="minutes">{durationValue.minutes}</span>
+                                    <span id="minutes">0</span>
                                     :
-                                    <span id="seconds">{durationValue.seconds}</span>
+                                    <span id="seconds">0</span>
                                 </div>
                                 <div>
                                     <span id="duration" ref={totalDuration}>00:00</span> 
@@ -306,7 +319,7 @@ const Player = (props) => {
                                     <BiSkipNext />
                                 </div>
                             
-                                <div id="volumeBtn" ref={volume} onWheel={handleVolumeWheel}>
+                                <div id="volumeBtn" className='volumeDesktop' ref={volume} onWheel={handleVolumeWheel}>
                                     {volumeValue > 0 ? 
                                         <div onClick={onClickVolume} style={{position: 'relative', zIndex: 2}}>
                                             <BsFillVolumeUpFill />
@@ -333,23 +346,40 @@ const Player = (props) => {
                                         </div>
                                     </div>
                                 </div>
+                                <div id="volumeBtn" className='volumeMobile'>
+                                    {activeVolumeMobile ? 
+                                        <div onClick={onClickVolumeMobile} style={{position: 'relative', zIndex: 2}}>
+                                            <BsFillVolumeUpFill />
+                                        </div>
+                                    : 
+                                    <div onClick={onClickVolumeMobile} style={{position: 'relative', zIndex: 2}}>
+                                        <BsFillVolumeMuteFill />
+                                    </div>
+                                    }
+                                </div>
                             </div>
 
                         </div>
                     </div>
-                    <div className='player__mobile' onClick={openPlayer} ref={playerMobile}>
-                        <div className='player__mobile--thumb'>
-                            <img src={currentMusic.audioThumb} alt="" />
-                        </div>
-                        <div className='player__mobile--name'>
-                            <div>{currentMusic.name}</div> 
-                            <div>{currentMusic.authorName}</div>
-                        </div>
-                        <div id="playBtn" className='player__mobile--play' ref={mobilePlayBtn}>
-                            {isPlaying ? <BsPauseFill onClick={onClickPlay} /> : <BsFillPlayFill onClick={onClickPlay}/>}
-                        </div>
-                    </div>
-                </div>
+                    { !isOpenPlayer ?
+                        <div className='player__mobile'  style={{ background: color}} onClick={openPlayer} ref={playerMobile}>
+                            <div id='progressBar' >
+                                    <div id="playbackProgress" ref={playbackProgressMobile}></div>
+                            </div>
+                            <div className='player__mobile--thumb'>
+                                <img src={currentMusic.audioThumb} alt="" />
+                            </div>
+                            <div className='player__mobile--name'>
+                                <div>{currentMusic.name}</div> 
+                                <div>{currentMusic.authorName}</div>
+                            </div>
+                            <div id="playBtn" className='player__mobile--play' ref={mobilePlayBtn}>
+                                {isPlaying ? <BsPauseFill onClick={onClickPlay} /> : <BsFillPlayFill onClick={onClickPlay}/>}
+                            </div>
+                        </div> 
+                        : ''
+                    }
+                </div> 
                  : ''
                 
             }

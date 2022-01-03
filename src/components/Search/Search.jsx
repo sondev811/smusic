@@ -1,13 +1,12 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { setLoadingAction } from '../../actions/loading.action';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { search } from '../../services';
-import { MdPlaylistAdd } from "react-icons/md";
 import './Search.scss';
-import { playerStore, queuesStore } from '../../features';
-import { setQueueItemAction } from '../../actions/queue.action';
+import { queuesStore } from '../../features';
+import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
 import musicService from '../../services/music.service';
 function Search(props) {
     const [searchKey, setSearchKey] = useState('');
@@ -16,22 +15,22 @@ function Search(props) {
     const [prevPageToken, setPrevPageToken] = useState('');
     const [numberOrder, setNumberOrder] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(1);
-    const typing = useRef('');
+    // const typing = useRef('');
     const dispatch = useAppDispatch();
     const queueListStore = useAppSelector(queuesStore);
-    const isOpenPlayer = useAppSelector(playerStore);
 
-    const onSearch = (event) => {
-        setSearchKey(event.target.value);
-        if (typing.current) clearTimeout(typing.current);
-        typing.current = setTimeout(async() => {
-            setNumberOrder(0);
-            setItemsPerPage(1);
-            dispatch(setLoadingAction({isLoading: true, content: 'Searching'}));
-            const response = await search(event.target.value);
-            dispatch(setLoadingAction({isLoading: false}));
-            setSearchState(response);
-        }, 500);
+    const onSearch = async(event) => {
+        event.preventDefault();
+        setNumberOrder(0);
+        setItemsPerPage(1);
+        dispatch(setLoadingAction({isLoading: true, content: 'Searching'}));
+        const response = await search(searchKey);
+        dispatch(setLoadingAction({isLoading: false}));
+        setSearchState(response);
+        // if (typing.current) clearTimeout(typing.current);
+        // typing.current = setTimeout(async() => {
+        //    
+        // }, 500);
     }
 
     const setSearchState = (response) => {
@@ -82,21 +81,18 @@ function Search(props) {
         if (queueListStore.find(item => item.youtubeId === data.youtubeId)) {
             return;
         }
-        const queueListTemp = [...queueListStore, data];
-        dispatch(setQueueItemAction(queueListTemp));
         dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
         dispatch(setLoadingAction({isLoading: false}));
         dispatch(setQueueItemAction(music.result.queueList));    
+        dispatch(setCurrentMusicAction(music.result.currentMusic));
     }
 
     const handleVideoInfo = (data) => {
         return {
             audioThumb: `https://img.youtube.com/vi/${data.id.videoId}/0.jpg`,
             authorName: data.snippet.channelTitle,
-            ggDriveId: '',
             name: data.snippet.title,
-            nameFormatted: '',
             youtubeId: data.id.videoId
         }
     }
@@ -112,12 +108,14 @@ function Search(props) {
                     </span> 
                 </div>
                 <div className='search__header--input'>
-                    <input 
-                        type="text" 
-                        placeholder='Youtube search...'
-                        value={searchKey} 
-                        onChange={onSearch}
-                    />
+                    <form onSubmit={onSearch}>
+                        <input 
+                            type="text" 
+                            placeholder='Youtube search...'
+                            value={searchKey} 
+                            onChange={(event) => setSearchKey(event.target.value)}
+                        />
+                    </form>
                     { searchKey ? 
                         <span 
                             className='clear'
@@ -129,10 +127,10 @@ function Search(props) {
                         : <span className='clear'><BiSearch/></span>}
                 </div>
             </div>
-            <div className={`search__list ${isOpenPlayer ? 'active-mobile-queue' : ''}`}>
+            <div className='search__list'>
                 {  searchData && searchData.map((element, i) => {
                     return(
-                    <div className='search__list--item' key={i}>
+                    <div className='search__list--item' key={i} onClick={() => addQueueList(element)}>
                         <div>
                             <div className='search__list--item--icon'>
                                 { numberOrder > 0 ? formatNumber(numberOrder * itemsPerPage + i + 1) : formatNumber(i + 1)}
@@ -144,9 +142,6 @@ function Search(props) {
                                 <div>{element.snippet.title}</div> 
                                 <div>{element.snippet.channelTitle}</div>
                             </div>
-                        </div>
-                        <div className='search__list--item--action'>
-                            <span onClick={() => addQueueList(element)}><MdPlaylistAdd/></span>
                         </div>
                     </div>
                    )

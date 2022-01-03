@@ -17,7 +17,8 @@ function Login(props) {
         return <Navigate to="/" push={true} />
     }
 
-    const login = async () => {
+    const login = async (e) => {
+        e.preventDefault();
         if (!userName || !password) {
             setErrors('Email and password is required');
             return;
@@ -47,24 +48,26 @@ function Login(props) {
         <div className='login'>
             <div className='login__logo'><RiNeteaseCloudMusicLine/>SMusic</div>
             <div className='login__form'>
-                <div className='login__form--items'> 
-                    <label htmlFor="username">
-                        Email hoặc tên đăng nhập
-                    </label>
-                    <input type="text" className={errors && !userName ? 'input-error' : ''} name="username" id="username" placeholder='Email hoặc tên đăng nhập' value={userName} onChange={handleChangeUserName}/>
-                </div>
-                <div className='login__form--items'> 
-                    <label htmlFor="password">
-                        Mật khẩu
-                    </label>
-                    <input type="password" className={errors && !password ? 'input-error' : ''}  name="password" id="password" placeholder='Mật khẩu' value={password} onChange={handleChangePassword}/>
-                </div>
-                <div className='login__form--error'>
-                    { errors }
-                </div>
-                <button onClick={login}>
-                    Đăng nhập
-                </button>
+                <form onSubmit={login}>
+                    <div className='login__form--items'> 
+                        <label htmlFor="username">
+                            Email hoặc tên đăng nhập
+                        </label>
+                        <input type="text" className={errors && !userName ? 'input-error' : ''} name="username" id="username" placeholder='Email hoặc tên đăng nhập' value={userName} onChange={handleChangeUserName}/>
+                    </div>
+                    <div className='login__form--items'> 
+                        <label htmlFor="password">
+                            Mật khẩu
+                        </label>
+                        <input type="password" className={errors && !password ? 'input-error' : ''}  name="password" id="password" placeholder='Mật khẩu' value={password} onChange={handleChangePassword}/>
+                    </div>
+                    <div className='login__form--error'>
+                        { errors }
+                    </div>
+                    <button>
+                        Đăng nhập
+                    </button>
+                </form>
             </div>
             <div className='sign-up'>
                 <p>

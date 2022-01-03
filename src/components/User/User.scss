@@ -39,6 +39,10 @@
         }
         &--mobile {
             font-size: 32px;
+            display: none;
+            @include mobile {
+                display: block;
+            }
         }
         &--child {
             @include mobile {
