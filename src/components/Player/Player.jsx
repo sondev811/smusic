@@ -4,7 +4,7 @@ import { BsChevronCompactDown, BsChevronDown, BsFillPlayFill, BsFillVolumeMuteFi
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { setPlayerAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
-import { colors, LoopType } from "../../constants/player";
+import { colors, http, LoopType } from "../../constants/player";
 import { currentMusicStore, playerStore, queuesStore, useOutside } from '../../features';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import musicService from "../../services/music.service";
@@ -279,7 +279,7 @@ const Player = (props) => {
                 currentMusic && currentMusic.youtubeId ?
                 <div>
                     <audio id="musicPlayer" ref={musicPlayer} controls autoPlay preload="auto" style={{display: 'none'}}> 
-                        <source src={`https://smusic-be.vercel.app/api/stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
+                        <source src={`${http.url}stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
                     </audio>
                     <div className='player__desktop'>
                         <div className={`musicPlayer ${isOpenPlayer ? 'active-mobile' : ''}`} >
