@@ -24,7 +24,7 @@ function Login(props) {
             return;
         }
         const body = {
-            email: userName,
+            email: userName.trim().toLowerCase(),
             password
         }
         setErrors('');

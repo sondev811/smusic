@@ -45,7 +45,7 @@ function Signup(props) {
             return;
         }
         const body = {
-            email: userName,
+            email: userName.trim().toLowerCase(),
             password,
             name
         }
@@ -53,6 +53,7 @@ function Signup(props) {
             error: '',
             passwordNotMatch: false
         });
+       
         dispatch(setLoadingAction({isLoading: true, content: ''}));
         const res = await authService.signUp(body);
         if (!res) {
