@@ -16,37 +16,31 @@ function Home(props) {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
-        let timeOutSetHeight = null;
-        const setHeightQueue = () => {
-            timeOutSetHeight = setTimeout(() => {
-                const player = document.getElementsByClassName('player');
-                const trendingList = document.getElementsByClassName('trending__list');
-                const header = document.getElementsByClassName('header');
-                if (!player || !trendingList || !header) {
-                    return;
-                }
-                const windownWidth = window.screen.width;
-                if (windownWidth <= 1024) {
-                    const height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
-                    trendingList[0].style.height = height;
-                    return;
-                }
-                trendingList[0].style.height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight + 'px';
-            }, 2000);
-        }
-        
         const getTrendingYoutube = async () => {
             const response = await getTrending();
             setSearchState(response);
         }
-
         getTrendingYoutube();
-        setHeightQueue();
-
-        return () => {
-            clearTimeout(timeOutSetHeight);
-        }
     }, [])
+
+    useEffect(() => {
+        const setHeightQueue = () => {
+            const player = document.getElementsByClassName('player');
+            const trendingList = document.getElementsByClassName('trending__list');
+            const header = document.getElementsByClassName('header');
+            if (!player || !trendingList || !header) {
+                return;
+            }
+            const windownWidth = window.screen.width;
+            if (windownWidth <= 1024) {
+                const height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                trendingList[0].style.height = height;
+                return;
+            }
+            trendingList[0].style.height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight + 'px';
+        }
+        setHeightQueue();
+    }, [trendingData]);
 
     const setSearchState = (response) => {
         if (!response || !response.result || !response.result.items || !response.result.items.length) {
@@ -61,9 +55,13 @@ function Home(props) {
 
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
+        if (!data.youtubeId) return;
         dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
         dispatch(setLoadingAction({isLoading: false}));
+        if (!music || !music.result || !music.result.queueList || !music.result.currentMusic) {
+            return;
+        }
         dispatch(setQueueItemAction(music.result.queueList));    
         dispatch(setCurrentMusicAction(music.result.currentMusic));
     }
@@ -97,6 +95,7 @@ function Home(props) {
         if (number < 10) return `0${number}`;
         return number;
     }
+    
     return (
         <div className='trending'>
             <div className='trending__header'>

@@ -14,48 +14,37 @@ function Queue(props) {
     const dispatch = useAppDispatch();
     const isOpenPlayer = useAppSelector(playerStore);
     useEffect(() => {
-        let timeOutSetHeight = null;
-        const setHeightQueue = () => {
-            timeOutSetHeight = setTimeout(() => {
-                const player = document.getElementsByClassName('player');
-                const queueList = document.getElementsByClassName('queue__list');
-                const header = document.getElementsByClassName('header');
-                if (!player || !queueList || !header) {
-                    return;
-                }
-                const windownWidth = window.screen.width;
-                if (windownWidth <= 1024) {
-                    const height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
-                    console.log("height: ", height);
-                    console.log("window.innerHeight: ", window.innerHeight);
-                    console.log("header[0].offsetHeight: ", header[0].offsetHeight);
-                    console.log("player[0].offsetHeight: ", player[0].offsetHeight);
-                    console.log("queueList[0].offsetTop: ", queueList[0].offsetTop);
-                    
-                        queueList[0].style.height = height;
-                    
-                    return;
-                }
-                queueList[0].style.height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight + 'px';
-            }, 2000);
-        }
         const getQueueList = async () => {
             dispatch(setLoadingAction({isLoading: true}));
             let response = await musicService.getQueueList();
             dispatch(setLoadingAction({isLoading: false}));
-            if (!response || !response.result) return;
+            if (!response || !response.result || !response.result.queue) return;
             dispatch(setQueueItemAction(response.result.queue));
         }
         getQueueList();
-        setHeightQueue();
-        return () => {
-            clearTimeout(timeOutSetHeight);
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+    useEffect(() => {
+        const setHeightQueue = () => {
+            const player = document.getElementsByClassName('player');
+            const queueList = document.getElementsByClassName('queue__list');
+            const header = document.getElementsByClassName('header');
+            if (!player || !queueList || !header) {
+                return;
+            }
+            const windowWidth = window.screen.width;
+            if (windowWidth <= 1024) {
+                const height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                queueList[0].style.height = height;
+                return;
+            }
+            queueList[0].style.height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight + 'px';
+        }
+        setHeightQueue();
+    }, [queues])
 
     const updateCurrentMusic = async(music) => {
-        if (currentMusic._id === music._id) {
+        if (currentMusic._id === music._id || !music.youtubeId) {
             return;
         }
         dispatch(setLoadingAction({isLoading: true}));
@@ -65,6 +54,7 @@ function Queue(props) {
     }
 
     const removeItem = async(music) => {
+        if (!music._id) return;
         dispatch(setLoadingAction({isLoading: true}));
         const response = await musicService.removeItemQueue(music._id);
         dispatch(setLoadingAction({isLoading: false}));

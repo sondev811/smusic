@@ -1,7 +1,7 @@
 @import '../../scss/mixin.scss';
 .trending {
     @include mobile {
-        padding: 1.3rem 1rem;
+        padding: 1.3rem .7rem;
         padding-bottom: 0;
     }
     &__header {

@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { setLoadingAction } from '../../actions/loading.action';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch } from '../../hooks';
 import { search } from '../../services';
 import './Search.scss';
-import { queuesStore } from '../../features';
 import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
 import musicService from '../../services/music.service';
 function Search(props) {
@@ -17,38 +16,32 @@ function Search(props) {
     const [itemsPerPage, setItemsPerPage] = useState(1);
     // const typing = useRef('');
     const dispatch = useAppDispatch();
-    const queueListStore = useAppSelector(queuesStore);
 
     useEffect(() => {
-        let timeOutSetHeight = null;
         const setHeightQueue = () => {
-            timeOutSetHeight = setTimeout(() => {
-                const player = document.getElementsByClassName('player');
-                const searchList = document.getElementsByClassName('search__list');
-                const header = document.getElementsByClassName('header');
-                if (!player || !searchList || !header) {
-                    return;
-                }
-                const windownWidth = window.screen.width;
-                if (windownWidth <= 1024) {
-                    const height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
-                    searchList[0].style.height = height;
-                    return;
-                }
-                searchList[0].style.height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight + 'px';
-            }, 2000);
+            const player = document.getElementsByClassName('player');
+            const searchList = document.getElementsByClassName('search__list');
+            const header = document.getElementsByClassName('header');
+            if (!player || !searchList || !header) {
+                return;
+            }
+            const windownWidth = window.screen.width;
+            if (windownWidth <= 1024) {
+                const height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                searchList[0].style.height = height;
+                return;
+            }
+            searchList[0].style.height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight + 'px';
         }
         setHeightQueue();
-        return () => {
-            clearTimeout(timeOutSetHeight);
-        }
-    }, []);
+    }, [searchData]);
 
     const onSearch = async(event) => {
         event.preventDefault();
+        if (!searchKey) return;
         setNumberOrder(0);
         setItemsPerPage(1);
-        dispatch(setLoadingAction({isLoading: true, content: 'Searching'}));
+        dispatch(setLoadingAction({isLoading: true, content: 'Đang tìm kiếm'}));
         const response = await search(searchKey);
         dispatch(setLoadingAction({isLoading: false}));
         setSearchState(response);
@@ -103,9 +96,13 @@ function Search(props) {
 
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
+        if (!data.youtubeId) return;
         dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
         dispatch(setLoadingAction({isLoading: false}));
+        if (!music || !music.result || !music.result.queueList || !music.result.currentMusic) {
+            return;
+        }
         dispatch(setQueueItemAction(music.result.queueList));    
         dispatch(setCurrentMusicAction(music.result.currentMusic));
     }
@@ -118,6 +115,7 @@ function Search(props) {
             youtubeId: data.id.videoId
         }
     }
+    
     return (
         <div className='search'>
             <div className='search__header'>
