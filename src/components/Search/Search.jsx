@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { setLoadingAction } from '../../actions/loading.action';
@@ -18,6 +18,31 @@ function Search(props) {
     // const typing = useRef('');
     const dispatch = useAppDispatch();
     const queueListStore = useAppSelector(queuesStore);
+
+    useEffect(() => {
+        let timeOutSetHeight = null;
+        const setHeightQueue = () => {
+            timeOutSetHeight = setTimeout(() => {
+                const player = document.getElementsByClassName('player');
+                const searchList = document.getElementsByClassName('search__list');
+                const header = document.getElementsByClassName('header');
+                if (!player || !searchList || !header) {
+                    return;
+                }
+                const windownWidth = window.screen.width;
+                if (windownWidth <= 1024) {
+                    const height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                    searchList[0].style.height = height;
+                    return;
+                }
+                searchList[0].style.height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight + 'px';
+            }, 2000);
+        }
+        setHeightQueue();
+        return () => {
+            clearTimeout(timeOutSetHeight);
+        }
+    }, []);
 
     const onSearch = async(event) => {
         event.preventDefault();

@@ -23,15 +23,12 @@
     }
     &__list {
         margin-top: 1.5rem;
-        max-height: 59vh;
         overflow-y: auto;
         @include tablet{
-            min-height: 68vh;
             margin-top: 1rem;
             padding: 0 .3rem;
         }
         @include mobile{
-            min-height: 68vh;
             margin-top: 1rem;
             padding: 0 .3rem;
         }

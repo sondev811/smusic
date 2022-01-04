@@ -31,14 +31,7 @@
     }
     &__list {
         margin-top: 1rem;
-        max-height: 59vh;
         overflow-y: auto;
-        @include tablet {
-            min-height: 70vh;
-        }
-        @include mobile {
-            min-height: 68vh;
-        }
         &::-webkit-scrollbar-track
         {
             border: 1px solid #070707;

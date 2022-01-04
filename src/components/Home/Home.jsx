@@ -16,11 +16,36 @@ function Home(props) {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
+        let timeOutSetHeight = null;
+        const setHeightQueue = () => {
+            timeOutSetHeight = setTimeout(() => {
+                const player = document.getElementsByClassName('player');
+                const trendingList = document.getElementsByClassName('trending__list');
+                const header = document.getElementsByClassName('header');
+                if (!player || !trendingList || !header) {
+                    return;
+                }
+                const windownWidth = window.screen.width;
+                if (windownWidth <= 1024) {
+                    const height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                    trendingList[0].style.height = height;
+                    return;
+                }
+                trendingList[0].style.height = window.innerHeight - trendingList[0].offsetTop - player[0].offsetHeight + 'px';
+            }, 2000);
+        }
+        
         const getTrendingYoutube = async () => {
             const response = await getTrending();
             setSearchState(response);
         }
+
         getTrendingYoutube();
+        setHeightQueue();
+
+        return () => {
+            clearTimeout(timeOutSetHeight);
+        }
     }, [])
 
     const setSearchState = (response) => {

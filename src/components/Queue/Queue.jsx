@@ -14,6 +14,31 @@ function Queue(props) {
     const dispatch = useAppDispatch();
     const isOpenPlayer = useAppSelector(playerStore);
     useEffect(() => {
+        let timeOutSetHeight = null;
+        const setHeightQueue = () => {
+            timeOutSetHeight = setTimeout(() => {
+                const player = document.getElementsByClassName('player');
+                const queueList = document.getElementsByClassName('queue__list');
+                const header = document.getElementsByClassName('header');
+                if (!player || !queueList || !header) {
+                    return;
+                }
+                const windownWidth = window.screen.width;
+                if (windownWidth <= 1024) {
+                    const height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
+                    console.log("height: ", height);
+                    console.log("window.innerHeight: ", window.innerHeight);
+                    console.log("header[0].offsetHeight: ", header[0].offsetHeight);
+                    console.log("player[0].offsetHeight: ", player[0].offsetHeight);
+                    console.log("queueList[0].offsetTop: ", queueList[0].offsetTop);
+                    
+                        queueList[0].style.height = height;
+                    
+                    return;
+                }
+                queueList[0].style.height = window.innerHeight - queueList[0].offsetTop - player[0].offsetHeight + 'px';
+            }, 2000);
+        }
         const getQueueList = async () => {
             dispatch(setLoadingAction({isLoading: true}));
             let response = await musicService.getQueueList();
@@ -22,6 +47,10 @@ function Queue(props) {
             dispatch(setQueueItemAction(response.result.queue));
         }
         getQueueList();
+        setHeightQueue();
+        return () => {
+            clearTimeout(timeOutSetHeight);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
