@@ -17,25 +17,6 @@ function Search(props) {
     // const typing = useRef('');
     const dispatch = useAppDispatch();
 
-    useEffect(() => {
-        const setHeightQueue = () => {
-            const player = document.getElementsByClassName('player');
-            const searchList = document.getElementsByClassName('search__list');
-            const header = document.getElementsByClassName('header');
-            if (!player || !searchList || !header) {
-                return;
-            }
-            const windowWidth = window.screen.width;
-            if (windowWidth <= 1024) {
-                const height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight - header[0].offsetHeight + 'px';
-                searchList[0].style.maxHeight = height;
-                return;
-            }
-            searchList[0].style.height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight + 'px';
-        }
-        setHeightQueue();
-    }, [searchData]);
-
     const onSearch = async(event) => {
         event.preventDefault();
         if (!searchKey) return;

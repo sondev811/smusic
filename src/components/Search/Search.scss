@@ -62,12 +62,15 @@
     }
     &__list {
         margin-top: 1.3rem;
+        max-height: 56vh;
         overflow-y: auto;
         @include tablet {
             margin-top: 1.5rem;
+            max-height: 78vh;
         }
         @include mobile {
             margin-top: 1rem;
+            max-height: 68vh;
         }
         &::-webkit-scrollbar-track
         {
