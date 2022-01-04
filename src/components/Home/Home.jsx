@@ -16,6 +16,7 @@ function Home(props) {
     const dispatch = useAppDispatch();
     
     useEffect(() => {
+        console.log('SMusic version 1.0');
         const getTrendingYoutube = async () => {
             const response = await getTrending();
             setSearchState(response);
