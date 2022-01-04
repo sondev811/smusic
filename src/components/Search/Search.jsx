@@ -103,9 +103,6 @@ function Search(props) {
 
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
-        if (queueListStore.find(item => item.youtubeId === data.youtubeId)) {
-            return;
-        }
         dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
         dispatch(setLoadingAction({isLoading: false}));
