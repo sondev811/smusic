@@ -1,6 +1,6 @@
-export const setPlayerAction = (state) => {
+export const setVolumeAction = (state) => {
     return {
-        type: 'PLAYER',
+        type: 'SET_VOLUME',
         payload: state
     }
 }

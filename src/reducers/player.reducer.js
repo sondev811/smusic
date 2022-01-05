@@ -1,12 +1,12 @@
 const initialState = {
-    isOpenPlayer: false,
+    volume: 0.5,
 }
 const playerReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'PLAYER':
+        case 'SET_VOLUME':
             return {
                 ...state, 
-                isOpenPlayer: action.payload
+                volume: action.payload
             };
         default:
             return state;

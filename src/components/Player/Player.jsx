@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
-import { BsChevronCompactDown, BsChevronDown, BsFillPlayFill, BsFillVolumeMuteFill, BsFillVolumeUpFill, BsPauseFill } from "react-icons/bs";
+import { BsChevronDown, BsFillPlayFill, BsFillVolumeMuteFill, BsFillVolumeUpFill, BsPauseFill } from "react-icons/bs";
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
-import { setPlayerAction } from '../../actions/player.action';
+import { setVolumeAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
 import { colors, http, LoopType } from "../../constants/player";
 import { currentMusicStore, playerStore, queuesStore, useOutside } from '../../features';
@@ -13,6 +13,7 @@ import './Player.scss';
 const Player = (props) => {
     const musicPlayer = useRef(null);
     const totalDuration = useRef(null);
+    const progressBar = useRef(null);
     const playbackProgress = useRef(null);
     const playbackProgressMobile = useRef(null);
     const volumeBar = useRef(null);
@@ -24,10 +25,9 @@ const Player = (props) => {
     useOutside(volume, () => setActiveVolume(false));
 
     const dispatch = useAppDispatch();
-
     const currentMusic = useAppSelector(currentMusicStore);
     const queuesList = useAppSelector(queuesStore);
-    const isOpenPlayer = useAppSelector(playerStore);
+    const volumeStore = useAppSelector(playerStore);
 
     const [isActiveVolume, setActiveVolume] = useState(false);
     const [volumeValue, setVolumeValue] = useState(50);
@@ -38,7 +38,8 @@ const Player = (props) => {
     const [activePrev, setActivePrev] = useState(false);
     const [activeVolumeMobile, setActiveVolumeMobile] = useState(true);
     const [color, setColor] = useState('rgba(184, 72, 56, .5)');
-    
+    const [openPlayer, setOpenPlayer] = useState(false);
+
     useEffect(() => {
         setColor(colors[Math.floor(Math.random() * colors.length)]);
         const progressEndMusic = async(music) => {
@@ -61,22 +62,23 @@ const Player = (props) => {
         }
 
         const setDuration = () => {
-            if (!musicPlayer.current) return;
-            const duration = formatDuration(parseInt(currentMusic.videoLength));
+            if (!musicPlayer.current || !musicPlayer.current.duration) return;
+            const duration = formatDuration(musicPlayer.current.duration);
             totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
         }
 
-        const minuteDom = document.getElementById('minutes');
-        const secondDom = document.getElementById('seconds');
         const updateProgressBar = () => {
+            if (!player || !player.duration || !player.currentTime || !minuteDom || !secondDom) return;
             const {minutes, seconds} = formatDuration(player.currentTime);
             minuteDom.innerHTML = minutes;
             secondDom.innerHTML = seconds;
-            const percentage = Math.floor((100 / parseInt(currentMusic.videoLength)) * player.currentTime);
-            if(!playbackProgress || !playbackProgress.current 
-                || !playbackProgressMobile || !playbackProgressMobile.current) return;
-            playbackProgress.current.style.width = percentage + '%';
-            playbackProgressMobile.current.style.width = percentage + '%';
+            const percentage = Math.floor((100 / player.duration) * player.currentTime);
+            if(playbackProgress && playbackProgress.current) {
+                playbackProgress.current.style.width = percentage + '%';
+            }
+            if(playbackProgressMobile && playbackProgressMobile.current) {
+                playbackProgressMobile.current.style.width = percentage + '%';
+            }
         }
 
         const play = () => {
@@ -87,17 +89,30 @@ const Player = (props) => {
             setPlay(false);
         }
 
-        if (!musicPlayer || !musicPlayer.current) return;
+        const volumeChange = () => {
+            dispatch(setVolumeAction(player.volume));
+            setVolumeValue(player.volume*100);
+        }
+
+        if (!musicPlayer || !musicPlayer.current || !playbackProgress || !playbackProgress.current) return;
         const player = musicPlayer.current;
+        const minuteDom = document.getElementById('minutes');
+        const secondDom = document.getElementById('seconds');
 
         player.load();
+        player.volume = volumeStore;
+        setVolumeValue(volumeStore*100)
         playbackProgress.current.style.width = 0 + '%';
+        if (minuteDom && secondDom) {
+            minuteDom.innerHTML = '00';
+            secondDom.innerHTML = '00';
+        }
         player.addEventListener('ended', ended);
         player.addEventListener('loadedmetadata', setDuration);
         player.addEventListener('timeupdate', updateProgressBar);
         player.addEventListener('play', play);
         player.addEventListener('pause', pause);
-
+        player.addEventListener('volumechange', volumeChange);
         return () => {
             if (!musicPlayer || !musicPlayer.current) return;
             musicPlayer.current.removeEventListener('ended', ended);
@@ -105,6 +120,7 @@ const Player = (props) => {
             musicPlayer.current.removeEventListener('timeupdate', updateProgressBar);
             musicPlayer.current.removeEventListener('play', play);
             musicPlayer.current.removeEventListener('pause', pause);
+            musicPlayer.current.removeEventListener('volumechange', volumeChange);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentMusic]);
@@ -140,11 +156,12 @@ const Player = (props) => {
 
     const handleProgressBar = event => {
         const player = musicPlayer.current;
+        const progress = progressBar.current;
         const progressPlay = playbackProgress.current;
-        if (!player || !progressPlay) return;
-        const position = event.clientX - progressPlay.getBoundingClientRect().left;
-        const percent = position / progressPlay.offsetWidth;
-        player.currentTime =percent * player.currentTime;
+        if (!player || !progress || !progressPlay || !player.currentTime | !player.duration) return;
+        const position = event.clientX - progress.getBoundingClientRect().left;
+        const percent = position / progress.offsetWidth;
+        player.currentTime = percent * player.duration;
         progressPlay.style.width = Math.floor(percent * 100) + '%';
     }
 
@@ -160,7 +177,6 @@ const Player = (props) => {
         } else if (volumeWidth < 10) {
             volumeWidth = 0;
         }
-        setVolumeValue(volumeWidth);
         player.volume = volumeWidth / 100;
     }
     
@@ -174,7 +190,6 @@ const Player = (props) => {
                 volume = 1;
             }
             player.volume = volume;
-            setVolumeValue(volume*100);
             return;
         }
         volume -= 0.1;
@@ -182,7 +197,6 @@ const Player = (props) => {
             volume = 0;
         }
         player.volume = volume;
-        setVolumeValue(volume*100);
     }
     
     const onClickVolume = () => setActiveVolume(!isActiveVolume);
@@ -204,14 +218,13 @@ const Player = (props) => {
         handleVolume(event);
     }
 
-    const openPlayer = (event) => {
+    const onOpenPlayer = (event) => {
         if (mobilePlayBtn.current.contains(event.target)) return;
-        dispatch(setPlayerAction(true));
-        
+        setOpenPlayer(true);
     }
 
-    const closePlayer = () => {
-        dispatch(setPlayerAction(false));
+    const onClosePlayer = () => {
+        setOpenPlayer(false);
     }
     
     //Event Play
@@ -267,7 +280,7 @@ const Player = (props) => {
     const onClickVolumeMobile = () => {
         setActiveVolumeMobile(!activeVolumeMobile);
         if (!activeVolumeMobile) {
-            musicPlayer.current.volume = 0.3; 
+            musicPlayer.current.volume = 0.5; 
             return;
         }
         musicPlayer.current.volume = 0; 
@@ -282,14 +295,14 @@ const Player = (props) => {
                         <source src={`${http.url}stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
                     </audio>
                     <div className='player__desktop'>
-                        <div className={`musicPlayer ${isOpenPlayer ? 'active-mobile' : ''}`} >
-                            <div className='down-mobile' onClick={closePlayer}>
+                        <div className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`} >
+                            <div className='down-mobile' onClick={onClosePlayer}>
                                 <BsChevronDown />
                             </div>
                             <p className="audio-name">{currentMusic.name}</p>   
                             <p className="author-name">{currentMusic.authorName}</p>
                             <div className="background"></div>
-                            <div id='progressBar' >
+                            <div id='progressBar' ref={progressBar} onMouseDown={handleProgressBar}>
                                 <div id="playbackProgress" ref={playbackProgress} onMouseDown={handleProgressBar}></div>
                             </div>
                             <div className="music-duration">
@@ -361,8 +374,8 @@ const Player = (props) => {
 
                         </div>
                     </div>
-                    { !isOpenPlayer ?
-                        <div className='player__mobile'  style={{ background: color}} onClick={openPlayer} ref={playerMobile}>
+                    { !openPlayer ?
+                        <div className='player__mobile'  style={{ background: color}} onClick={onOpenPlayer} ref={playerMobile}>
                             <div id='progressBar' >
                                     <div id="playbackProgress" ref={playbackProgressMobile}></div>
                             </div>
