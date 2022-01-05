@@ -18,7 +18,6 @@ const Player = (props) => {
     const playbackProgressMobile = useRef(null);
     const volumeBar = useRef(null);
     const loopTypeRef = useRef(LoopType.None);
-    const queuesListRef = useRef([]);
     const volume = useRef(null);
     const playerMobile = useRef(null);
     const mobilePlayBtn = useRef(null);
@@ -44,19 +43,20 @@ const Player = (props) => {
         setColor(colors[Math.floor(Math.random() * colors.length)]);
         const progressEndMusic = async(music) => {
             await musicService.updateCurrentMusic(music.youtubeId);
+            player.pause();
             dispatch(setCurrentMusicAction(music));
         }
 
         const ended = async() => {
-            const indexCurrentMusic = queuesListRef.current.findIndex(item => item.youtubeId === currentMusic.youtubeId);
-            if (indexCurrentMusic === queuesListRef.current.length - 1) {
+            const indexCurrentMusic = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
+            if (indexCurrentMusic === queuesList.length - 1) {
                 if (loopTypeRef.current === LoopType.All) {
                     const nextMusic = queuesList[0];
                     progressEndMusic(nextMusic);
                 }
                 return;
             }
-            const nextMusic = queuesListRef.current[indexCurrentMusic + 1];
+            const nextMusic = queuesList[indexCurrentMusic + 1];
             if (!nextMusic.youtubeId) return;
             progressEndMusic(nextMusic);
         }
@@ -126,8 +126,8 @@ const Player = (props) => {
     }, [currentMusic]);
 
     useEffect(() => {
-        queuesListRef.current = queuesList;
-    }, [queuesList]);
+        
+    }, []);
 
     useEffect(() => {
         const checkNextPrev = () => {
@@ -262,12 +262,12 @@ const Player = (props) => {
     }
 
     const nextPrevBtn = async(type) => {
-        const index = queuesListRef.current.findIndex(item => item.youtubeId === currentMusic.youtubeId);
+        const index = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
         let nextMusic = null;
         if (type === 'next') {
-            nextMusic = queuesListRef.current[index + 1];
+            nextMusic = queuesList[index + 1];
         } else {
-            nextMusic = queuesListRef.current[index - 1];
+            nextMusic = queuesList[index - 1];
         }
         if (!nextMusic.youtubeId) {
             return;
@@ -291,7 +291,7 @@ const Player = (props) => {
             {
                 currentMusic && currentMusic.youtubeId ?
                 <div>
-                    <audio id="musicPlayer" ref={musicPlayer} controls autoPlay preload="auto" style={{display: 'none'}}> 
+                    <audio id="musicPlayer" ref={musicPlayer} controls autoPlay preload="none" style={{display: 'none'}}> 
                         <source src={`${http.url}stream?id=${currentMusic.youtubeId}`} type="audio/mpeg" /> 
                     </audio>
                     <div className='player__desktop'>
