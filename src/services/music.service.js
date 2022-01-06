@@ -16,5 +16,9 @@ class MusicService {
     removeItemQueue(musicId) {
         return http.get(api.removeItemQueue, {musicId});
     }
+
+    updateQueueList(body) {
+        return http.post(api.updateQueueList, body);
+    }
 }
 export default new MusicService();

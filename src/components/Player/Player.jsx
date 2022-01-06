@@ -21,6 +21,7 @@ const Player = (props) => {
     const volume = useRef(null);
     const playerMobile = useRef(null);
     const mobilePlayBtn = useRef(null);
+    const queuesListRef = useRef([]);
     useOutside(volume, () => setActiveVolume(false));
 
     const dispatch = useAppDispatch();
@@ -48,15 +49,15 @@ const Player = (props) => {
         }
 
         const ended = async() => {
-            const indexCurrentMusic = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
-            if (indexCurrentMusic === queuesList.length - 1) {
+            const indexCurrentMusic = queuesListRef.current.findIndex(item => item.youtubeId === currentMusic.youtubeId);
+            if (indexCurrentMusic === queuesListRef.current.length - 1) {
                 if (loopTypeRef.current === LoopType.All) {
-                    const nextMusic = queuesList[0];
+                    const nextMusic = queuesListRef.current[0];
                     progressEndMusic(nextMusic);
                 }
                 return;
             }
-            const nextMusic = queuesList[indexCurrentMusic + 1];
+            const nextMusic = queuesListRef.current[indexCurrentMusic + 1];
             if (!nextMusic.youtubeId) return;
             progressEndMusic(nextMusic);
         }
@@ -126,8 +127,8 @@ const Player = (props) => {
     }, [currentMusic]);
 
     useEffect(() => {
-        
-    }, []);
+        queuesListRef.current = queuesList;
+    }, [queuesList]);
 
     useEffect(() => {
         const checkNextPrev = () => {

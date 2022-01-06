@@ -7,5 +7,6 @@ export const api = {
     getQueueList: 'getQueueList',
     updateCurrentMusic: 'updateCurrentMusic',
     removeItemQueue: 'removeItemQueue',
-    getYoutubeTrending: 'getYoutubeTrending'
+    getYoutubeTrending: 'getYoutubeTrending',
+    updateQueueList: 'updateQueueList'
 }
