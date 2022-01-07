@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BiSkipNext, BiSkipPrevious } from "react-icons/bi";
 import { BsChevronDown, BsFillPlayFill, BsFillVolumeMuteFill, BsFillVolumeUpFill, BsPauseFill } from "react-icons/bs";
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
@@ -22,7 +22,7 @@ const Player = (props) => {
     const playerMobile = useRef(null);
     const mobilePlayBtn = useRef(null);
     const queuesListRef = useRef([]);
-    useOutside(volume, () => setActiveVolume(false));
+    useOutside(volume, useCallback(() => setActiveVolume(false), []));
 
     const dispatch = useAppDispatch();
     const currentMusic = useAppSelector(currentMusicStore);
@@ -44,8 +44,35 @@ const Player = (props) => {
         setColor(colors[Math.floor(Math.random() * colors.length)]);
         const progressEndMusic = async(music) => {
             await musicService.updateCurrentMusic(music.youtubeId);
-            player.pause();
             dispatch(setCurrentMusicAction(music));
+        }
+
+        const setHandleMetaData = () => {
+            if (!navigator || !navigator.mediaSession) return;
+            navigator.mediaSession.metadata = new window.MediaMetadata({
+                title: currentMusic.name,
+                artist: currentMusic.authorName,
+                artwork: [
+                  { src: currentMusic.audioThumb, sizes: '512x512', type: 'image/png' },
+                ]
+            });
+            const skipTime = 10;
+            navigator.mediaSession.setActionHandler('play', () => {
+                musicPlayer.current.play();
+                setPlay(true);
+            });
+            navigator.mediaSession.setActionHandler('pause', () => {
+                musicPlayer.current.pause();
+                setPlay(false);
+            });
+            navigator.mediaSession.setActionHandler('previoustrack', () => nextPrevBtn('prev'));
+            navigator.mediaSession.setActionHandler('nexttrack', () => nextPrevBtn('next'))
+            navigator.mediaSession.setActionHandler('seekbackward', function() {
+                musicPlayer.current.currentTime = Math.max(musicPlayer.current.currentTime - skipTime, 0);
+              });
+            navigator.mediaSession.setActionHandler('seekforward', function() {
+            musicPlayer.current.currentTime = Math.min(musicPlayer.current.currentTime + skipTime, musicPlayer.current.duration);
+            });
         }
 
         const ended = async() => {
@@ -84,6 +111,7 @@ const Player = (props) => {
 
         const play = () => {
             setPlay(true);
+            setHandleMetaData();
         }
 
         const pause = () => {
@@ -270,7 +298,7 @@ const Player = (props) => {
         } else {
             nextMusic = queuesList[index - 1];
         }
-        if (!nextMusic.youtubeId) {
+        if (!nextMusic || !nextMusic.youtubeId) {
             return;
         }
         await musicService.updateCurrentMusic(nextMusic.youtubeId);

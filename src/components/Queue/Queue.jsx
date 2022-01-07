@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { BsFillPlayFill } from "react-icons/bs";
 import { CgPlayListRemove } from "react-icons/cg";
-import { FiMenu } from "react-icons/fi";
+import { HiMenuAlt4 } from "react-icons/hi";
 import { setLoadingAction } from '../../actions/loading.action';
 import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
-import { currentMusicStore, playerStore, queuesStore } from '../../features';
+import { currentMusicStore, queuesStore } from '../../features';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import musicService from '../../services/music.service';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './Queue.scss';
 function Queue(props) {
     const queues = useAppSelector(queuesStore);
@@ -92,12 +92,15 @@ function Queue(props) {
                                 return(
                                     <Draggable key={element.youtubeId} draggableId={element.youtubeId} index={i}>
                                         {(provided) => (
-                                            <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
-                                                <div className={`queue__list--item`} >
-                                                    <div className={`queue__list--item--icon ${element.youtubeId && currentMusic.youtubeId === element.youtubeId ? 'playing' : ''}`}>
-                                                        <span className='play-icon' onClick={() => updateCurrentMusic(element)}>{<BsFillPlayFill/>}</span>
-                                                        <img className='image-play' src={process.env.PUBLIC_URL + 'equaliser-animated-green.f93a2ef4.gif'} alt='play-icon' />
-                                                        <img className='image-loading' src={process.env.PUBLIC_URL + 'loading.gif'} alt='play-icon' />
+                                            <div {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef} className={element.youtubeId && currentMusic.youtubeId === element.youtubeId ? 'playing' : ''}>
+                                                <div className={`queue__list--item `} >
+                                                    <div className={`queue__list--item--icon`}>
+                                                        <span><HiMenuAlt4/></span> 
+                                                        <span >
+                                                            {<BsFillPlayFill className='play-icon' onClick={() => updateCurrentMusic(element)}/>}
+                                                            <img className='image-play' src={process.env.PUBLIC_URL + 'equaliser-animated-green.f93a2ef4.gif'} alt='play-icon' />
+                                                        </span>
+                                                        
                                                     </div>
                                                     <div className='queue__list--item--thumb' onClick={() => updateCurrentMusic(element)}><img src={element.audioThumb} alt="" /></div>
                                                     <div onClick={() => updateCurrentMusic(element)} className={`queue__list--item--name ${element.youtubeId && currentMusic.youtubeId === element.youtubeId ? 'playing' : ''}`}>

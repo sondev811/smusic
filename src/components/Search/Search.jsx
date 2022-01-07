@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { setLoadingAction } from '../../actions/loading.action';
+import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
 import { useAppDispatch } from '../../hooks';
 import { search } from '../../services';
-import './Search.scss';
-import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
 import musicService from '../../services/music.service';
+import './Search.scss';
 function Search(props) {
     const [searchKey, setSearchKey] = useState('');
     const [searchData, setSearchData] = useState([]);
