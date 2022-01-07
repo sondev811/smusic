@@ -43,19 +43,13 @@ const Player = (props) => {
     useEffect(() => {
         setColor(colors[Math.floor(Math.random() * colors.length)]);
         const progressEndMusic = async(music) => {
+            resetPlayer();
             await musicService.updateCurrentMusic(music.youtubeId);
             dispatch(setCurrentMusicAction(music));
         }
 
         const setHandleMetaData = () => {
             if (!navigator || !navigator.mediaSession) return;
-            navigator.mediaSession.metadata = new window.MediaMetadata({
-                title: currentMusic.name,
-                artist: currentMusic.authorName,
-                artwork: [
-                  { src: currentMusic.audioThumb, sizes: '512x512', type: 'image/png' },
-                ]
-            });
             const skipTime = 10;
             navigator.mediaSession.setActionHandler('play', () => {
                 musicPlayer.current.play();
@@ -65,13 +59,22 @@ const Player = (props) => {
                 musicPlayer.current.pause();
                 setPlay(false);
             });
-            navigator.mediaSession.setActionHandler('previoustrack', () => nextPrevBtn('prev'));
-            navigator.mediaSession.setActionHandler('nexttrack', () => nextPrevBtn('next'))
+            const index = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
+            if (index < queuesList.length - 1) {
+                navigator.mediaSession.setActionHandler('nexttrack', () => nextPrevBtn('next'));
+            } else {
+                navigator.mediaSession.setActionHandler('nexttrack', null);
+            }
+            if (index > 0) {
+                navigator.mediaSession.setActionHandler('previoustrack', () => nextPrevBtn('prev'));
+            } else {
+                navigator.mediaSession.setActionHandler('previoustrack', null);
+            }
             navigator.mediaSession.setActionHandler('seekbackward', function() {
                 musicPlayer.current.currentTime = Math.max(musicPlayer.current.currentTime - skipTime, 0);
-              });
+            });
             navigator.mediaSession.setActionHandler('seekforward', function() {
-            musicPlayer.current.currentTime = Math.min(musicPlayer.current.currentTime + skipTime, musicPlayer.current.duration);
+                musicPlayer.current.currentTime = Math.min(musicPlayer.current.currentTime + skipTime, musicPlayer.current.duration);
             });
         }
 
@@ -111,7 +114,13 @@ const Player = (props) => {
 
         const play = () => {
             setPlay(true);
-            setHandleMetaData();
+            navigator.mediaSession.metadata = new window.MediaMetadata({
+                title: currentMusic.name,
+                artist: currentMusic.authorName,
+                artwork: [
+                  { src: currentMusic.audioThumb, sizes: '512x512', type: 'image/png' },
+                ]
+            });
         }
 
         const pause = () => {
@@ -130,7 +139,8 @@ const Player = (props) => {
 
         player.load();
         player.volume = volumeStore;
-        setVolumeValue(volumeStore*100)
+        setVolumeValue(volumeStore*100);
+        setHandleMetaData();
         playbackProgress.current.style.width = 0 + '%';
         if (minuteDom && secondDom) {
             minuteDom.innerHTML = '00';
@@ -150,6 +160,12 @@ const Player = (props) => {
             musicPlayer.current.removeEventListener('play', play);
             musicPlayer.current.removeEventListener('pause', pause);
             musicPlayer.current.removeEventListener('volumechange', volumeChange);
+            navigator.mediaSession.setActionHandler('play', null);
+            navigator.mediaSession.setActionHandler('pause', null);
+            navigator.mediaSession.setActionHandler('previoustrack', null);
+            navigator.mediaSession.setActionHandler('nexttrack', null)
+            navigator.mediaSession.setActionHandler('seekbackward', null);
+            navigator.mediaSession.setActionHandler('seekforward', null);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentMusic]);
@@ -290,6 +306,15 @@ const Player = (props) => {
         }
     }
 
+    const resetPlayer = () => {
+        if(playbackProgress && playbackProgress.current) {
+            playbackProgress.current.style.width = 0 + '%';
+        }
+        if(playbackProgressMobile && playbackProgressMobile.current) {
+            playbackProgressMobile.current.style.width = 0 + '%';
+        }
+    }
+
     const nextPrevBtn = async(type) => {
         const index = queuesList.findIndex(item => item.youtubeId === currentMusic.youtubeId);
         let nextMusic = null;
@@ -303,6 +328,7 @@ const Player = (props) => {
         }
         await musicService.updateCurrentMusic(nextMusic.youtubeId);
         setColor()
+        resetPlayer();
         dispatch(setCurrentMusicAction(nextMusic));
     }
 
