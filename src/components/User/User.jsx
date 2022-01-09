@@ -7,8 +7,7 @@ import userService from '../../services/user.service';
 import { setUserAction } from '../../actions/user.action';
 import { setLoadingAction } from '../../actions/loading.action';
 import { setQueueAction } from '../../actions/queue.action';
-import { useAppDispatch } from '../../hooks';
-import { useOutside } from '../../features';
+import { useAppDispatch, useOutside } from '../../hooks';
 
 function User(props) {
     const [isOpenUser, setOpenUser] = useState(false);

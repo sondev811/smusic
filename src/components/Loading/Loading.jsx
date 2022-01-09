@@ -1,5 +1,5 @@
 import React from 'react';
-import { loadingContentStore, loadingStore } from '../../features';
+import { loadingContentStore, loadingStore } from '../../hooks';
 import { useAppSelector } from '../../hooks';
 import './Loading.scss';
 function Loading(props) {

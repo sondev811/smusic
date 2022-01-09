@@ -5,8 +5,7 @@ import { CgPlayListRemove } from "react-icons/cg";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { setLoadingAction } from '../../actions/loading.action';
 import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
-import { currentMusicStore, queuesStore } from '../../features';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector, currentMusicStore, queuesStore } from '../../hooks';
 import musicService from '../../services/music.service';
 import './Queue.scss';
 function Queue(props) {

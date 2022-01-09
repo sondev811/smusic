@@ -5,7 +5,7 @@ import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { setVolumeAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
 import { colors, http, LoopType } from "../../constants/player";
-import { currentMusicStore, playerStore, queuesStore, useOutside } from '../../features';
+import { currentMusicStore, playerStore, queuesStore, useEventListener, useKeyPress, useOutside } from '../../hooks';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import musicService from "../../services/music.service";
 import './Player.scss';
@@ -39,6 +39,23 @@ const Player = (props) => {
     const [activeVolumeMobile, setActiveVolumeMobile] = useState(true);
     const [color, setColor] = useState('rgba(184, 72, 56, .5)');
     const [openPlayer, setOpenPlayer] = useState(false);
+    const [pressSpace, setPressSpace] = useState(false);
+
+    const handlePressSpace = useCallback((event) => {
+        if (!event || !event.key) return;
+        const {key} = event;
+        if (key === ' ' && musicPlayer.current) {
+            setPressSpace(!pressSpace);
+            if(pressSpace) {
+                musicPlayer.current.play();
+                return;
+            }
+            musicPlayer.current.pause();
+          
+        }
+    }, [pressSpace]);
+
+    useEventListener("keydown", handlePressSpace);
 
     useEffect(() => {
         setColor(colors[Math.floor(Math.random() * colors.length)]);
@@ -189,7 +206,7 @@ const Player = (props) => {
             }
         }
         checkNextPrev();
-    }, [queuesList, currentMusic])
+    }, [queuesList, currentMusic]);
 
     const formatDuration = time => {
         let minutes = Math.floor(time / 60);
