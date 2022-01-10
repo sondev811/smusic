@@ -30,7 +30,7 @@ function Search(props) {
                 const windowWidth = window.screen.width;
                 if (windowWidth <= 1024) {
                     timeIntervalHeight = setInterval(() => {
-                        const height = window.screen.height - searchList[0].offsetTop - player[0].offsetHeight * 2 - header[0].offsetHeight + 'px';
+                        const height = window.innerHeight - searchList[0].offsetTop - player[0].offsetHeight * 2 - header[0].offsetHeight + 'px';
                         searchList[0].style.height = height;
                     }, 3000);
                     return;
