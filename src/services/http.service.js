@@ -6,6 +6,10 @@ import authService from './auth.service';
 
 class HttpClient {
 
+    timeout(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     getUrl(url, params) {
         const urlWithParams = this.handleParams(params);
         return `${http.url}${url}${urlWithParams}`;
@@ -38,9 +42,9 @@ class HttpClient {
     }
     
     handleErrors(res) {
-        store.dispatch(setLoadingAction({isLoading: false, content: ''}));
+        store.dispatch(setLoadingAction({isLoading: false}));
         if (!res) {
-            store.dispatch(setLoadingAction({isLoading: true, content: `Can't connect to server`}));
+            store.dispatch(setLoadingAction({isLoading: true, content: `Không thể kết nối tới máy chủ`}));
             return;
         }
         if(res.status === 401) {
@@ -53,8 +57,9 @@ class HttpClient {
         };
     }
     
-    handleSuccess(res) {
-        store.dispatch(setLoadingAction({isLoading: false, content: ''}));
+    async handleSuccess(res) {
+        await this.timeout(500);
+        store.dispatch(setLoadingAction({isLoading: false}));
         if (!res.data.success) {
             return {
                 error: res.data.error,
@@ -74,6 +79,7 @@ class HttpClient {
             const options = {
                 headers: this.getHeader()
             }
+            store.dispatch(setLoadingAction({isLoading: true}));
             const response = await axios.get(url, options);
             return this.handleSuccess(response);
         } catch (error) {
@@ -91,9 +97,9 @@ class HttpClient {
             const bodyParse = JSON.stringify(body);
             const response =  await axios.post(url, bodyParse, options);
             return this.handleSuccess(response);
-            } catch (error) {
+        } catch (error) {
             return this.handleErrors(error.response);
-            }
+        }
     }
 }
 

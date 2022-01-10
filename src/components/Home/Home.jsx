@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import { setLoadingAction } from '../../actions/loading.action';
 import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
 import { useAppDispatch } from '../../hooks';
 import { getTrending } from '../../services';
@@ -56,9 +55,7 @@ function Home(props) {
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
         if (!data.youtubeId) return;
-        dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
-        dispatch(setLoadingAction({isLoading: false}));
         if (!music || !music.result || !music.result.queueList || !music.result.currentMusic) {
             return;
         }
@@ -76,18 +73,14 @@ function Home(props) {
     }
 
     const prev = async() => {
-        dispatch(setLoadingAction({isLoading: true}));
         const response = await getTrending(prevPageToken);
         setNumberOrder(numberOrder - 1);
-        dispatch(setLoadingAction({isLoading: false}));
         setSearchState(response);
     }
 
     const next = async() => {
-        dispatch(setLoadingAction({isLoading: true}));
         const response = await getTrending(nextPageToken);
         setNumberOrder(numberOrder + 1);
-        dispatch(setLoadingAction({isLoading: false}));
         setSearchState(response);
     }
 

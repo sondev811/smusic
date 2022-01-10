@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
 import { RiNeteaseCloudMusicLine } from "react-icons/ri";
-import { NavLink } from "react-router-dom";
-import './Signup.scss';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { setLoadingAction } from '../../actions/loading.action';
-import Loading from '../Loading/Loading';
-import authService from '../../services/auth.service';
 import { useAppDispatch } from '../../hooks';
+import authService from '../../services/auth.service';
+import Loading from '../Loading/Loading';
+import './Signup.scss';
 
 function Signup(props) {
     const dispatch = useAppDispatch();
@@ -33,13 +32,13 @@ function Signup(props) {
         e.preventDefault();
         if (!userName || !password || !confirmPassword || !name) {
             setErrors({
-                error : 'Email, Password, Confirm password, Name is required',
+                error : 'Tài khoản, Mật khẩu, Nhập lại mật khẩu, Tên là bắt buộc',
             });
             return;
         }
         if (password !== confirmPassword) {
             setErrors({
-                error: 'The entered passwords do not match',
+                error: 'Mật khẩu đã nhập không trùng khớp',
                 passwordNotMatch: true
             });
             return;
@@ -54,7 +53,7 @@ function Signup(props) {
             passwordNotMatch: false
         });
        
-        dispatch(setLoadingAction({isLoading: true, content: ''}));
+        dispatch(setLoadingAction({isLoading: true, content: 'Đang đăng ký tài khoản...'}));
         const res = await authService.signUp(body);
         if (!res) {
             return;
@@ -65,7 +64,7 @@ function Signup(props) {
             });
             return;
         }
-        dispatch(setLoadingAction({isLoading: true, content: 'Sign up success, navigating to login...'}));
+        dispatch(setLoadingAction({isLoading: true, content: 'Đăng ký thành công, đang chuyển sang đăng nhập...'}));
         setTimeout(() => {
             dispatch(setLoadingAction({isLoading: false}));
             return navigate('/login');

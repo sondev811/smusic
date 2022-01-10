@@ -1,13 +1,12 @@
-import React, { useEffect, useRef, useState }from 'react';
-import './User.scss';
+import React, { useEffect, useRef, useState } from 'react';
 import { AiFillCaretDown } from "react-icons/ai";
 import { BiUserCircle } from "react-icons/bi";
+import { setQueueAction } from '../../actions/queue.action';
+import { setUserAction } from '../../actions/user.action';
+import { useAppDispatch, useOutside } from '../../hooks';
 import authService from '../../services/auth.service';
 import userService from '../../services/user.service';
-import { setUserAction } from '../../actions/user.action';
-import { setLoadingAction } from '../../actions/loading.action';
-import { setQueueAction } from '../../actions/queue.action';
-import { useAppDispatch, useOutside } from '../../hooks';
+import './User.scss';
 
 function User(props) {
     const [isOpenUser, setOpenUser] = useState(false);
@@ -17,7 +16,6 @@ function User(props) {
     useOutside(user, () => setOpenUser(false));
     useEffect(() => {
         const getUserInfo = async () => {
-            dispatch(setLoadingAction({isLoading: true}));
             let response = await userService.getUserInfo();
             if (!response || !response.result) return;
             setUserInfo(response.result.userInfo);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { setLoadingAction } from '../../actions/loading.action';
@@ -16,15 +16,43 @@ function Search(props) {
     const [itemsPerPage, setItemsPerPage] = useState(1);
     // const typing = useRef('');
     const dispatch = useAppDispatch();
-
+    useEffect(() => {
+        let timeOutSetHeight = null;
+        let timeIntervalHeight = null;
+        const setHeightSearch = () => {
+            timeOutSetHeight = setTimeout(() => {
+                const player = document.getElementsByClassName('player');
+                const searchList = document.getElementsByClassName('search__list');
+                const header = document.getElementsByClassName('header');
+                if (!player || !searchList || !header) {
+                    return;
+                }
+                const windowWidth = window.screen.width;
+                if (windowWidth <= 1024) {
+                    timeIntervalHeight = setInterval(() => {
+                        const height = window.screen.height - searchList[0].offsetTop - player[0].offsetHeight * 2 - header[0].offsetHeight + 'px';
+                        searchList[0].style.height = height;
+                    }, 3000);
+                    return;
+                }
+                searchList[0].style.height = window.innerHeight  - searchList[0].offsetTop - player[0].offsetHeight + 'px';
+            }, 2000);
+        }
+        setHeightSearch();
+        return () => {
+            clearTimeout(timeOutSetHeight);
+            clearInterval(timeIntervalHeight);
+        }
+    }, [])
     const onSearch = async(event) => {
         event.preventDefault();
         if (!searchKey) return;
         setNumberOrder(0);
         setItemsPerPage(1);
-        dispatch(setLoadingAction({isLoading: true, content: 'Đang tìm kiếm'}));
+        setTimeout(() => {
+            dispatch(setLoadingAction({isLoading: true, content: 'Đang tìm kiếm...'}));
+        }, 1);
         const response = await search(searchKey);
-        dispatch(setLoadingAction({isLoading: false}));
         setSearchState(response);
         // if (typing.current) clearTimeout(typing.current);
         // typing.current = setTimeout(async() => {
@@ -44,18 +72,14 @@ function Search(props) {
     }
 
     const next = async() => {
-        dispatch(setLoadingAction({isLoading: true}));
         const response = await search(searchKey, nextPageToken);
         setNumberOrder(numberOrder + 1);
-        dispatch(setLoadingAction({isLoading: false}));
         setSearchState(response);
     }
 
     const prev = async() => {
         if (numberOrder === 0) return;
-        dispatch(setLoadingAction({isLoading: true}));
         const response = await search(searchKey, prevPageToken);
-        dispatch(setLoadingAction({isLoading: false}));
         setNumberOrder(numberOrder - 1);
         console.log(response);
         setSearchState(response);
@@ -78,9 +102,7 @@ function Search(props) {
     const addQueueList = async(element) => {
         const data = handleVideoInfo(element);
         if (!data.youtubeId) return;
-        dispatch(setLoadingAction({isLoading: true}));
         const music = await musicService.getMusic(data.youtubeId);
-        dispatch(setLoadingAction({isLoading: false}));
         if (!music || !music.result || !music.result.queueList || !music.result.currentMusic) {
             return;
         }

@@ -3,9 +3,8 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { BsFillPlayFill } from "react-icons/bs";
 import { CgPlayListRemove } from "react-icons/cg";
 import { HiMenuAlt4 } from "react-icons/hi";
-import { setLoadingAction } from '../../actions/loading.action';
 import { setCurrentMusicAction, setQueueItemAction } from '../../actions/queue.action';
-import { useAppDispatch, useAppSelector, currentMusicStore, queuesStore } from '../../hooks';
+import { currentMusicStore, queuesStore, useAppDispatch, useAppSelector } from '../../hooks';
 import musicService from '../../services/music.service';
 import './Queue.scss';
 function Queue(props) {
@@ -14,9 +13,7 @@ function Queue(props) {
     const dispatch = useAppDispatch();
     useEffect(() => {
         const getQueueList = async () => {
-            dispatch(setLoadingAction({isLoading: true}));
             let response = await musicService.getQueueList();
-            dispatch(setLoadingAction({isLoading: false}));
             if (!response || !response.result || !response.result.queue) return;
             dispatch(setQueueItemAction(response.result.queue));
         }
@@ -46,17 +43,13 @@ function Queue(props) {
         if (currentMusic._id === music._id || !music.youtubeId) {
             return;
         }
-        dispatch(setLoadingAction({isLoading: true}));
         await musicService.updateCurrentMusic(music.youtubeId);
-        dispatch(setLoadingAction({isLoading: false}));
         dispatch(setCurrentMusicAction(music));
     }
 
     const removeItem = async(music) => {
         if (!music._id) return;
-        dispatch(setLoadingAction({isLoading: true}));
         const response = await musicService.removeItemQueue(music._id);
-        dispatch(setLoadingAction({isLoading: false}));
         if (!response || !response.result || !response.result.queue) {
             return;
         }

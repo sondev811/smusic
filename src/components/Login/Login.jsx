@@ -20,7 +20,7 @@ function Login(props) {
     const login = async (e) => {
         e.preventDefault();
         if (!userName || !password) {
-            setErrors('Email and password is required');
+            setErrors('Tài khoản và mật khẩu là bắt buộc');
             return;
         }
         const body = {
@@ -28,7 +28,9 @@ function Login(props) {
             password
         }
         setErrors('');
-        dispatch(setLoadingAction({isLoading: true, content: ''}));
+        setTimeout(() => {
+            dispatch(setLoadingAction({isLoading: true, content: 'Đang đăng nhập...'}));
+        }, 1);
         const res = await authService.login(body);
         if (!res) {
             return;

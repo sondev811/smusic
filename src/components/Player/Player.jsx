@@ -5,8 +5,7 @@ import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { setVolumeAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
 import { colors, http, LoopType } from "../../constants/player";
-import { currentMusicStore, playerStore, queuesStore, useEventListener, useKeyPress, useOutside } from '../../hooks';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { currentMusicStore, playerStore, queuesStore, useAppDispatch, useAppSelector, useEventListener, useOutside } from '../../hooks';
 import musicService from "../../services/music.service";
 import './Player.scss';
 
