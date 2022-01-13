@@ -10,7 +10,7 @@ import {
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { setVolumeAction } from '../../actions/player.action';
 import { setCurrentMusicAction } from '../../actions/queue.action';
-import { colors, http, LoopType } from '../../constants/player';
+import { colors, LoopType } from '../../constants/player';
 import {
   currentMusicStore,
   playerStore,
@@ -57,6 +57,7 @@ const Player = () => {
   const [color, setColor] = useState('rgba(184, 72, 56, .5)');
   const [openPlayer, setOpenPlayer] = useState(false);
   const [pressSpace, setPressSpace] = useState(false);
+  const [musicUrl, setMusicUrl] = useState('');
 
   const handlePressSpace = useCallback(
     (event) => {
@@ -77,7 +78,18 @@ const Player = () => {
   useEventListener('keydown', handlePressSpace);
 
   useEffect(() => {
+    const getMusicUrl = async () => {
+      if (!currentMusic || !currentMusic.youtubeId) return;
+      const response = await musicService.getMusicUrl(currentMusic.youtubeId);
+      if (!response || !response.result || !response.result.url) return;
+      setMusicUrl(response.result.url);
+    };
+    getMusicUrl();
+  }, [currentMusic]);
+
+  useEffect(() => {
     setColor(colors[Math.floor(Math.random() * colors.length)]);
+
     const progressEndMusic = async (music) => {
       resetPlayer();
       await musicService.updateCurrentMusic(music.youtubeId);
@@ -190,7 +202,6 @@ const Player = () => {
       dispatch(setVolumeAction(player.volume));
       setVolumeValue(player.volume * 100);
     };
-
     if (
       !musicPlayer ||
       !musicPlayer.current ||
@@ -233,7 +244,7 @@ const Player = () => {
       navigator.mediaSession.setActionHandler('seekforward', null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMusic]);
+  }, [musicUrl]);
 
   useEffect(() => {
     queuesListRef.current = queuesList;
@@ -418,7 +429,7 @@ const Player = () => {
 
   return (
     <div className="player">
-      {currentMusic && currentMusic.youtubeId ? (
+      {currentMusic && currentMusic.youtubeId && musicUrl ? (
         <div>
           <audio
             id="musicPlayer"
@@ -428,10 +439,7 @@ const Player = () => {
             preload="none"
             style={{ display: 'none' }}
           >
-            <source
-              src={`${http.url}stream?id=${currentMusic.youtubeId}`}
-              type="audio/mpeg"
-            />
+            <source src={musicUrl ? musicUrl : null} type="audio/mpeg" />
           </audio>
           <div className="player__desktop">
             <div className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}>

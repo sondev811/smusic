@@ -1,6 +1,6 @@
 import axios from 'axios';
 import store from '../store';
-import { http } from '../constants/player';
+import { http } from '../constants/api.constant';
 import { setLoadingAction } from '../actions/loading.action';
 import authService from './auth.service';
 
@@ -62,7 +62,6 @@ class HttpClient {
   }
 
   async handleSuccess(res) {
-    await this.timeout(500);
     store.dispatch(setLoadingAction({ isLoading: false }));
     if (!res.data.success) {
       return {

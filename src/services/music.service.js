@@ -9,6 +9,10 @@ class MusicService {
     return http.get(api.getQueueList);
   }
 
+  getMusicUrl(id) {
+    return http.get(api.stream, { id });
+  }
+
   updateCurrentMusic(youtubeId) {
     return http.get(api.updateCurrentMusic, { youtubeId });
   }

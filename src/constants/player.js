@@ -4,11 +4,6 @@ export const LoopType = {
   All: 'all'
 };
 
-export const http = {
-  // url: 'https://smusic-be.herokuapp.com/api/'
-  url: 'https://smusic-be.vercel.app/api/'
-};
-
 export const colors = [
   'rgba(80, 112, 168, .3)',
   'rgba(184, 72, 56, .5)',
