@@ -5,8 +5,8 @@ export const LoopType = {
 };
 
 export const http = {
-  // url: 'https://smusic-be.vercel.app/api/'
-  url: 'https://smusic-be.herokuapp.com/api/'
+  // url: 'https://smusic-be.herokuapp.com/api/'
+  url: 'https://smusic-be.vercel.app/api/'
 };
 
 export const colors = [
