@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { BsFillPlayFill } from 'react-icons/bs';
 import { CgPlayListRemove } from 'react-icons/cg';
@@ -14,11 +14,17 @@ import {
   useAppSelector
 } from '../../hooks';
 import musicService from '../../services/music.service';
+import Toast from '../Toast/Toast';
 import './Queue.scss';
 function Queue() {
   const queues = useAppSelector(queuesStore);
   const currentMusic = useAppSelector(currentMusicStore);
   const dispatch = useAppDispatch();
+  const [toast, setToast] = useState({
+    isShow: false,
+    status: false,
+    message: ''
+  });
   useEffect(() => {
     const getQueueList = async () => {
       let response = await musicService.getQueueList();
@@ -70,6 +76,11 @@ function Queue() {
     if (!response || !response.result || !response.result.queue) {
       return;
     }
+    setToast({
+      isShow: true,
+      status: true,
+      message: 'Đã bài hát khỏi hàng chỡ!!!'
+    });
     dispatch(setQueueItemAction(response.result.queue));
   };
 
@@ -182,6 +193,13 @@ function Queue() {
           )}
         </Droppable>
       </DragDropContext>
+      {toast.isShow && (
+        <Toast
+          isShow={toast.isShow}
+          status={toast.status}
+          message={toast.message}
+        />
+      )}
     </div>
   );
 }

@@ -33,8 +33,8 @@ function Home() {
       if (!player || !trendingList || !header) {
         return;
       }
-      const windownWidth = window.screen.width;
-      if (windownWidth <= 1024) {
+      const windowWidth = window.screen.width;
+      if (windowWidth <= 1024) {
         const height =
           window.innerHeight -
           trendingList[0].offsetTop -

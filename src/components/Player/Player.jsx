@@ -22,6 +22,7 @@ import {
   useOutside
 } from '../../hooks';
 import musicService from '../../services/music.service';
+import Toast from '../Toast/Toast';
 import './Player.scss';
 
 const Player = () => {
@@ -58,6 +59,11 @@ const Player = () => {
   const [openPlayer, setOpenPlayer] = useState(false);
   const [pressSpace, setPressSpace] = useState(false);
   const [musicUrl, setMusicUrl] = useState('');
+  const [toast, setToast] = useState({
+    isShow: false,
+    status: false,
+    message: ''
+  });
 
   const handlePressSpace = useCallback(
     (event) => {
@@ -198,6 +204,14 @@ const Player = () => {
       setPlay(false);
     };
 
+    const error = () => {
+      setToast({
+        isShow: true,
+        status: false,
+        message: 'Không thể tải bài hát. Hãy fresh lại trang!!!'
+      });
+    };
+
     const volumeChange = () => {
       dispatch(setVolumeAction(player.volume));
       setVolumeValue(player.volume * 100);
@@ -212,8 +226,9 @@ const Player = () => {
     const player = musicPlayer.current;
     const minuteDom = document.getElementById('minutes');
     const secondDom = document.getElementById('seconds');
-
     player.load();
+    const source = document.getElementById('music-source');
+    source.addEventListener('error', error);
     player.volume = volumeStore;
     setVolumeValue(volumeStore * 100);
     setHandleMetaData();
@@ -236,6 +251,7 @@ const Player = () => {
       player.removeEventListener('play', play);
       player.removeEventListener('pause', pause);
       player.removeEventListener('volumechange', volumeChange);
+      player.removeEventListener('error', error);
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('previoustrack', null);
@@ -439,7 +455,11 @@ const Player = () => {
             preload="none"
             style={{ display: 'none' }}
           >
-            <source src={musicUrl ? musicUrl : null} type="audio/mpeg" />
+            <source
+              id="music-source"
+              src={musicUrl ? musicUrl : null}
+              type="audio/mpeg"
+            />
           </audio>
           <div className="player__desktop">
             <div className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}>
@@ -596,6 +616,13 @@ const Player = () => {
         </div>
       ) : (
         ''
+      )}
+      {toast.isShow && (
+        <Toast
+          isShow={toast.isShow}
+          status={toast.status}
+          message={toast.message}
+        />
       )}
     </div>
   );

@@ -18,7 +18,7 @@ function Header() {
           <span>
             <MdHomeFilled />
           </span>
-          Trang chủ
+          Trending
         </NavLink>
         <NavLink to="/search" activeclassname="active">
           <span>

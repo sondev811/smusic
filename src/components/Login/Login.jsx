@@ -59,6 +59,7 @@ function Login() {
           <div className="login__form--items">
             <label htmlFor="username">Email hoặc tên đăng nhập</label>
             <input
+              data-testid="username"
               type="text"
               className={errors && !userName ? 'input-error' : ''}
               name="username"
