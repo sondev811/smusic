@@ -79,7 +79,7 @@ function Queue() {
     setToast({
       isShow: true,
       status: true,
-      message: 'Đã bài hát khỏi hàng chỡ!!!'
+      message: 'Đã xóa bài hát khỏi hàng chờ!!!'
     });
     dispatch(setQueueItemAction(response.result.queue));
   };

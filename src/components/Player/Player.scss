@@ -70,8 +70,8 @@
             font-size: 20px;
             display: none;
             @include mobile {
-                right: .5rem;
-                top: 6px;
+                right: 0.8rem;
+                top: 12px;
             }
         }
         @include tablet {
@@ -105,8 +105,20 @@
     }
     @include tablet {
         .active-mobile {
-            height: auto;
+            height: 100%;
             padding: 1rem;
+            position: fixed;
+            bottom: 0;
+          #progressBar {
+            margin-bottom: 10px;
+            margin-top: 35px;
+          }
+          .author-name {
+            margin-bottom: 25px;
+          }
+          .controlers {
+            margin-top: 35px;
+          }
         }
     }
     .audio-name {
@@ -135,7 +147,7 @@
         background: linear-gradient(to right, #3498db 0%, #9b59b6 72%);
     }
     #playBtn, #nextBtn, #prevBtn, #loopBtn {
-        padding: 0 10px;
+        padding: 0 15px;
         z-index: 2;
         position: relative;
         cursor: pointer;
@@ -148,6 +160,19 @@
         svg {
             font-size: 35px;
         }
+    }
+    .cd {
+      width: 250px;
+      height: 250px;
+      border-radius: 100%;
+      background-size: auto;
+      background-position: center;
+      margin: 50px auto;
+      margin-bottom: 55px;
+      animation: rotation 10s infinite linear;
+      box-shadow: 9px 13px 48px -22px rgba(0,0,0,0.89);
+-webkit-box-shadow: 9px 13px 48px -22px rgba(0,0,0,0.89);
+-moz-box-shadow: 9px 13px 48px -22px rgba(0,0,0,0.89);
     }
     #prevBtn {
         padding-right: 15px;
@@ -286,4 +311,12 @@
             float: right;
         }
     }
+}
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
 }

@@ -395,15 +395,18 @@ const Player = () => {
       player.setAttribute('loop', true);
       setLoopType(LoopType.One);
       loopTypeRef.current = LoopType.One;
-    } else if (loopType === LoopType.One) {
+      return;
+    }
+    if (loopType === LoopType.One) {
       player.removeAttribute('loop');
       setLoopType(LoopType.All);
       loopTypeRef.current = LoopType.All;
-    } else {
-      player.removeAttribute('loop');
-      setLoopType(LoopType.None);
-      loopTypeRef.current = LoopType.None;
+      return;
     }
+
+    player.removeAttribute('loop');
+    setLoopType(LoopType.None);
+    loopTypeRef.current = LoopType.None;
   };
 
   const resetPlayer = () => {
@@ -444,7 +447,7 @@ const Player = () => {
   };
 
   return (
-    <div className="player">
+    <div className="player" style={{ zIndex: openPlayer ? 1112 : 1000 }}>
       {currentMusic && currentMusic.youtubeId && musicUrl ? (
         <div>
           <audio
@@ -462,10 +465,23 @@ const Player = () => {
             />
           </audio>
           <div className="player__desktop">
-            <div className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}>
+            <div
+              className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}
+              style={{
+                backgroundImage: openPlayer
+                  ? `linear-gradient(240deg, rgba(0, 0, 0, 0.3), ${color}`
+                  : ''
+              }}
+            >
               <div className="down-mobile" onClick={onClosePlayer}>
                 <BsChevronDown />
               </div>
+              {openPlayer && (
+                <div
+                  className="cd"
+                  style={{ backgroundImage: `url(${currentMusic.audioThumb})` }}
+                ></div>
+              )}
               <p className="audio-name">{currentMusic.name}</p>
               <p className="author-name">{currentMusic.authorName}</p>
               <div className="background"></div>
