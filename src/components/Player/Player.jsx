@@ -482,8 +482,10 @@ const Player = () => {
                   style={{ backgroundImage: `url(${currentMusic.audioThumb})` }}
                 ></div>
               )}
-              <p className="audio-name">{currentMusic.name}</p>
-              <p className="author-name">{currentMusic.authorName}</p>
+              <div>
+                <p className="audio-name">{currentMusic.name}</p>
+                <p className="author-name">{currentMusic.authorName}</p>
+              </div>
               <div className="background"></div>
               <div
                 id="progressBar"
