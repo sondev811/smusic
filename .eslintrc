@@ -9,18 +9,18 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "prettier/prettier": [
-            "error",
-            {
-              "printWidth": 80,
-              "endOfLine": "auto",
-              "semi": true,
-              "singleQuote": true,
-              "trailingComma" : "none",
-              "no-mixed-spaces-and-tabs": ["error", "smart-tabs"]
+        // "prettier/prettier": [
+        //     "error",
+        //     {
+        //       "printWidth": 80,
+        //       "endOfLine": "auto",
+        //       "semi": true,
+        //       "singleQuote": true,
+        //       "trailingComma" : "none",
+        //       "no-mixed-spaces-and-tabs": ["error", "smart-tabs"]
         
-            }
-        ],
-        "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+        //     }
+        // ],
+        // "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     }
   }

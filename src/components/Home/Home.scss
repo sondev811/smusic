@@ -122,6 +122,13 @@
             }
             
         }
+        .active-click {
+          background: #181818;
+          .trending__list--item--name, .trending__list--item--icon{
+            color: #1db954;
+          }
+
+        }
         .active-item {
             background-color: rgba(255,255,255,.1);
         }

@@ -1,8 +1,7 @@
 import React from 'react';
-import { BsMusicNoteList } from 'react-icons/bs';
 import { HiSearchCircle } from 'react-icons/hi';
 import { MdHomeFilled } from 'react-icons/md';
-import { RiNeteaseCloudMusicLine } from 'react-icons/ri';
+import { RiNeteaseCloudMusicLine, RiPlayList2Fill } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 import './Header.scss';
 
@@ -26,11 +25,11 @@ function Header() {
           </span>
           Tìm kiếm
         </NavLink>
-        <NavLink to="/queue" activeclassname="active">
+        <NavLink to="/playlist" activeclassname="active">
           <span>
-            <BsMusicNoteList />
+            <RiPlayList2Fill />
           </span>
-          Hàng đợi
+          Playlists
         </NavLink>
       </nav>
     </div>

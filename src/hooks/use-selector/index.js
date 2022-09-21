@@ -1,6 +1,9 @@
-export const queuesStore = (state) => state.queue.queueList;
+export const playlistStore = (state) => state.queue;
+export const playlistItemStore = (state) => state.queue.list;
+export const playlistNameStore = (state) => state.queue.playlistName;
 export const currentMusicStore = (state) => state.queue.currentMusic;
 export const loadingStore = (state) => state.loading.isLoading;
 export const loadingContentStore = (state) => state.loading.content;
 export const playerStore = (state) => state.player.volume;
 export const searchTypingStore = (state) => state.search.isTyping;
+export const userStore = (state) => state.user;

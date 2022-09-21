@@ -76,13 +76,15 @@ class HttpClient {
     };
   }
 
-  async get(url, params = {}) {
+  async get(url, params = {}, isLoading = true) {
     try {
       url = this.getUrl(url, params);
       const options = {
         headers: this.getHeader()
       };
-      store.dispatch(setLoadingAction({ isLoading: true }));
+      if (isLoading) {
+        store.dispatch(setLoadingAction({ isLoading: true }));
+      }
       const response = await axios.get(url, options);
       return this.handleSuccess(response);
     } catch (error) {
@@ -90,13 +92,16 @@ class HttpClient {
     }
   }
 
-  async post(url, body) {
+  async post(url, body, isLoading = false) {
     try {
       url = this.getUrl(url, {});
       const options = {
         headers: this.getHeader()
       };
       const bodyParse = JSON.stringify(body);
+      if (isLoading) {
+        store.dispatch(setLoadingAction({ isLoading: true }));
+      }
       const response = await axios.post(url, bodyParse, options);
       return this.handleSuccess(response);
     } catch (error) {

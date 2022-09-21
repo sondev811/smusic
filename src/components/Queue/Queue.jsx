@@ -5,19 +5,20 @@ import { CgPlayListRemove } from 'react-icons/cg';
 import { HiMenuAlt4 } from 'react-icons/hi';
 import {
   setCurrentMusicAction,
-  setQueueItemAction
+  setSongsPlaylistAction
 } from '../../actions/queue.action';
 import {
   currentMusicStore,
-  queuesStore,
+  playlistItemStore, playlistStore,
   useAppDispatch,
   useAppSelector
 } from '../../hooks';
 import musicService from '../../services/music.service';
 import Toast from '../Toast/Toast';
 import './Queue.scss';
-function Queue() {
-  const queues = useAppSelector(queuesStore);
+function Queue({ closeQueue }) {
+  const queues = useAppSelector(playlistItemStore);
+  const playlist = useAppSelector(playlistStore);
   const currentMusic = useAppSelector(currentMusicStore);
   const dispatch = useAppDispatch();
   const [toast, setToast] = useState({
@@ -26,20 +27,11 @@ function Queue() {
     message: ''
   });
   useEffect(() => {
-    const getQueueList = async () => {
-      let response = await musicService.getQueueList();
-      if (!response || !response.result || !response.result.queue) return;
-      dispatch(setQueueItemAction(response.result.queue));
-    };
-    getQueueList();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
     const setHeightQueue = () => {
       const player = document.getElementsByClassName('player');
       const queueList = document.getElementsByClassName('queue__list');
       const header = document.getElementsByClassName('header');
-      if (!player || !queueList || !header || !queueList.length) {
+      if (!player || !queueList || !header || !player[0] || !queueList[0] || !header[0] ) {
         return;
       }
       const windowWidth = window.screen.width;
@@ -63,17 +55,20 @@ function Queue() {
   }, [queues]);
 
   const updateCurrentMusic = async (music) => {
-    if (currentMusic._id === music._id || !music.youtubeId) {
+    if (currentMusic._id === music._id || !music.youtubeId || !playlist || !playlist.playlistId) {
       return;
     }
-    await musicService.updateCurrentMusic(music.youtubeId);
+    const result = await musicService.updateCurrentMusic(music.youtubeId, playlist.playlistId);
+    if (!result || !result.status) return;
+    closeQueue();
     dispatch(setCurrentMusicAction(music));
   };
 
   const removeItem = async (music) => {
-    if (!music._id) return;
-    const response = await musicService.removeItemQueue(music._id);
-    if (!response || !response.result || !response.result.queue) {
+    if (!music._id || !playlist || !playlist.playlistId) return;
+    const response = await musicService.removeItemPlaylist(music._id, playlist.playlistId);
+    console.log(response);
+    if (!response || !response.result || !response.result.queue || !response.result.queue.list) {
       return;
     }
     setToast({
@@ -81,20 +76,21 @@ function Queue() {
       status: true,
       message: 'Đã xóa bài hát khỏi hàng chờ!!!'
     });
-    dispatch(setQueueItemAction(response.result.queue));
+    dispatch(setSongsPlaylistAction(response.result.queue.list));
   };
 
   const handleDragEnd = async (data) => {
-    if (!data.destination) return;
+    if (!data.destination || !playlist || !playlist.playlistId) return;
     const dragItemSource = queues[data.source.index];
     const dragItemDestination = queues[data.destination.index];
     if (dragItemSource.youtubeId === dragItemDestination.youtubeId) return;
     let items = queues.filter((item) => item !== dragItemSource);
     items.splice(data.destination.index, 0, dragItemSource);
-    dispatch(setQueueItemAction(items));
+    dispatch(setSongsPlaylistAction(items));
     const body = {
       sourceIndex: data.source.index,
-      destinationIndex: data.destination.index
+      destinationIndex: data.destination.index,
+      playlistId: playlist.playlistId
     };
     await musicService.updateQueueList(body);
   };
@@ -102,7 +98,7 @@ function Queue() {
   return (
     <div className="queue">
       <div className="queue__header">
-        <h3>Hàng đợi ({queues.length})</h3>
+        <h3>{ playlist.playlistName || 'Danh sách bài hát' } ({queues.length})</h3>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="queues">
@@ -113,11 +109,12 @@ function Queue() {
               ref={provided.innerRef}
             >
               {queues &&
+                queues.length > 0 &&
                 queues.map((element, i) => {
                   return (
                     <Draggable
-                      key={element.youtubeId}
-                      draggableId={element.youtubeId}
+                      key={element && element.youtubeId}
+                      draggableId={element && element.youtubeId}
                       index={i}
                     >
                       {(provided) => (
@@ -126,6 +123,7 @@ function Queue() {
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}
                           className={
+                            element &&
                             element.youtubeId &&
                             currentMusic.youtubeId === element.youtubeId
                               ? 'playing'

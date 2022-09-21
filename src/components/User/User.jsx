@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
-import { setQueueAction } from '../../actions/queue.action';
+import { setPlaylistAction } from '../../actions/queue.action';
 import { setUserAction } from '../../actions/user.action';
 import { useAppDispatch, useOutside } from '../../hooks';
 import authService from '../../services/auth.service';
+import musicService from '../../services/music.service';
 import userService from '../../services/user.service';
 import './User.scss';
 
@@ -17,16 +18,24 @@ function User() {
   useEffect(() => {
     const getUserInfo = async () => {
       let response = await userService.getUserInfo();
-      if (!response || !response.result) return;
+      if (!response || !response.result || !response.result.userInfo || !response.result.queue) return;
       setUserInfo(response.result.userInfo);
       dispatch(setUserAction(response.result));
-      const queueList = response.result.queue;
-      let currentMusic = response.result.currentMusic;
-      const queueAction = {
-        queueList,
-        currentMusic
+      const list = response.result.queue.list;
+      const playlistId = response.result.queue._id;
+      let currentMusic = response.result.queue.currentMusic;
+      if (!currentMusic && response.result.queue.list.length) {
+        currentMusic = response.result.queue.list[0];
+        await musicService.updateCurrentMusic(currentMusic.youtubeId, playlistId);
+      }
+      const playlistName = response.result.queue.playlistName;
+      const playlist = {
+        list,
+        currentMusic,
+        playlistName,
+        playlistId
       };
-      dispatch(setQueueAction(queueAction));
+      dispatch(setPlaylistAction(playlist));
     };
     getUserInfo();
   }, [dispatch]);

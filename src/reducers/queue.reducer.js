@@ -1,20 +1,29 @@
 const initialState = {
-  queueList: [],
-  currentMusic: {}
+  list: [],
+  currentMusic: {},
+  playlistName: '',
+  playlistId: ''
 };
 const queueReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'QUEUE':
+    case 'PLAYLIST':
       return {
         ...state,
-        queueList: action.payload.queueList,
-        currentMusic: action.payload.currentMusic
+        list: action.payload.list,
+        currentMusic: action.payload.currentMusic,
+        playlistName: action.payload.playlistName,
+        playlistId: action.payload.playlistId
       };
-    case 'QUEUE_ITEM':
+    case 'PLAYLIST_ITEM':
       return {
         ...state,
-        queueList: action.payload
+        list: action.payload
       };
+    case 'PLAYLIST_NAME':
+      return {
+        ...state,
+        playlistName: action.payload
+      }
     case 'CURRENT_MUSIC':
       return {
         ...state,

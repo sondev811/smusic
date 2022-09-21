@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
+import Playlist from './components/Playlist/Playlist';
 import Queue from './components/Queue/Queue';
 import Search from './components/Search/Search';
 import Signup from './components/Signup/Signup';
@@ -19,7 +20,8 @@ ReactDOM.render(
         <Route exact path="/" element={<PrivateRoute />}>
           <Route exact path="" element={<Home />} />
           <Route exact path="search" element={<Search />} />
-          <Route exact path="queue" element={<Queue />} />
+          <Route exact path="queue" element={<Queue closeQueue={() => { console.log("Playing")}} />} />
+          <Route exact path="playlist" element={<Playlist />} />
         </Route>
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/login" element={<Login />} />

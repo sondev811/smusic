@@ -1,0 +1,263 @@
+@import '../../scss/mixin.scss';
+.playlist {
+    @include mobile {
+        padding: 1rem 0;
+        padding-bottom: 0;
+        padding-top: 17px;
+    }
+    &__header {
+      @include flex(center, left);
+        @include mobile {
+            padding: 0 1rem;
+        }
+        h3 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -.04em;
+            line-height: 28px;
+            text-transform: none;
+            margin: 0px;
+        }
+    }
+    svg {
+      font-size: 24px;
+      margin-left: 15px;
+      margin-top: 3px;
+      cursor: pointer;
+    }
+    &__add {
+      position: absolute;
+      width: 100%;
+      height: 60%;
+      top: 0;
+      left: 0;
+      z-index: 100000;
+      @include flex(center, center);
+      div {
+        background-color: #282828;
+        border-radius: 8px;
+        box-shadow: 0 4px 4px rgba(0,0,0, .3);
+        padding: 1rem;
+        position: relative;
+        h3 {
+          margin: 0;
+          margin-bottom: 15px;
+        }
+        span {
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          sgv {
+            font-size: 16px;
+          }
+        }
+        input {
+          background: hsla(0,0%,100%,.1);
+          border: 1px solid transparent;
+          border-radius: 4px;
+          color: #fff;
+          font-family: inherit;
+          font-size: 14px;
+          height: 40px;
+          padding-left: 10px;
+          width: 95%;
+          box-shadow: none!important;
+          outline: none!important;
+        }
+        button {
+          border: 0px;
+          border-radius: 20px;
+          text-align: center;
+          padding: .5rem 1rem;
+          font-size: 14px;
+          margin-top: 15px;
+          float: right;
+          pointer-events: none;
+          background-color: gray;
+          cursor: default;
+          transition: .3s all;
+        }
+        .active-btn {
+          pointer-events: unset;
+          cursor: pointer;
+          background-color: #fff;
+        }
+      }
+    }
+    &__list {
+        margin-top: 1.5rem;
+        overflow-y: auto;
+        @include tablet{
+            margin-top: 1rem;
+            padding: 0 .3rem;
+        }
+        @include mobile{
+            margin-top: 1rem;
+            padding: 0 .3rem;
+        }
+        &>div {
+            @include flex(center, space-between);
+            padding-right: 1.5rem;
+            @include tablet {
+                padding-right: 0;
+            }
+            @include mobile {
+                margin-bottom: 5px;
+            }
+            margin-bottom: 15px;
+            cursor: pointer;
+            &:hover {
+                background: #181818;
+                .queue__list--item--name  {
+                    color: #1db954;
+                }
+                @include tablet {
+                    .queue__list--item--name  {
+                        color: #fff;
+                    }
+                }
+            }
+            border-radius: 4px;
+        }
+        &--remove {
+            font-size: 23px;
+            @include flex(center, center);
+            a {
+                font-size: 21px;
+                color: #fff;
+            }
+            svg {
+                transition: .3s all ease;
+                margin-right: 10px;
+                @include mobile {
+                    margin-right: 5px;
+                }
+            }
+            svg:hover {
+                color: #1db954;
+            }
+        }
+        .disable-delete {
+          pointer-events: none;
+          cursor: default;
+          color: #777;
+        }
+        &::-webkit-scrollbar-track
+        {
+            border: 1px solid #070707;
+            background-color: #121212;
+        }
+
+        &::-webkit-scrollbar
+        {
+            width: 7px;
+            background-color: #121212;
+        }
+
+        &::-webkit-scrollbar-thumb
+        {
+            background-color: #000000;	
+        }
+        &--item {
+          padding: .5rem 0;
+          width: 100%;
+            @include flex(center, left);
+            &--name {
+                transition: .3s all;
+                div:first-child {
+                    margin-bottom: 3px;
+                    @include mobile {
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        width: 165px;
+                    }
+                }
+                div:last-child {
+                    font-size: 14px;;
+                }
+            }
+            &--icon {
+                @include flex(center, center);
+                img {
+                    display: none;
+                    width: 16px;
+                }
+                span:first-child {
+                    @include mobile {
+                        display: none;
+                    }
+                    cursor: grab;
+                    svg {
+                        color: #fff!important;
+                    }
+                    padding-right: 1.5rem;
+                }
+                span {
+                    @include flex(center, center);
+                }
+                svg {
+                    font-size: 22px;
+                    transition: .3s all;
+                    &:hover {
+                        color: #1db954;
+                    }
+                }
+            }
+            &--thumb {
+                padding: 0!important;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 70px;
+                img {
+                    width: 80px;
+                    @include mobile {
+                        width: 70px;
+                    }
+                }
+            }
+            &>div {
+                @include mobile {
+                    padding: 0 .8rem;
+                }
+                padding: 0 1.5rem;
+            }
+        }
+        .active-item {
+            background-color: rgba(255,255,255,.1);
+        }
+        .playing {
+            background: #181818;
+            color: #1db954;
+            .queue__list--remove {
+                color: #fff;
+                pointer-events: none;
+                opacity: .3;
+            }
+            .play-icon {
+                display: none;
+            }
+            .image-loading {
+                display: none;
+            }
+            .image-play {
+                display: block;
+                padding-left: .4rem;
+            }
+          
+        }
+        .downloading {
+            .play-icon {
+                display: none;
+            }
+            .image-play {
+                display: none;
+            }
+            .image-loading {
+                display: block;
+            }
+        }
+    }
+
+}

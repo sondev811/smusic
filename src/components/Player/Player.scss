@@ -4,7 +4,6 @@
     z-index: 1000;
     bottom: 0;
     left: 0;
-    padding-bottom: 1rem;
     width: 100%;
     background-color: #181818;
     border-top: 1px solid #282828;
@@ -50,58 +49,119 @@
             margin: 0!important;
         }
     }
+    &__desktop {
+      @include flex(center, center);
+      &>div {
+        flex: 1;
+      }
+      #progressBar {
+        margin: 0 10px;
+      }
+      .music-duration {
+        @include flex(center, center);
+      }
+      .controlers {
+        margin-bottom: 10px;
+      }
+      .audio-name {
+        font-size: 1em;
+        font-weight: 600;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 230px;
+      }
+      .author-name {
+        font-size: 0.9em;
+        text-align: left;
+        opacity: 0.6;
+      }
+      &--song-info {
+        padding: 0 1rem;
+        @include flex(center, center);
+        div {
+          padding: 0 .5rem;
+        }
+        img {
+          width: 80px;
+        }
+      }
+      &--song-list {
+        @include flex(center, flex-end);
+        padding-right: 2rem;
+        a {
+          color: #a7a7a7;
+          transition: .3s all;
+          &:hover {
+            color: #fff;
+          }
+        }
+        svg {
+          font-size: 25px;
+          cursor: pointer;
+        }
+      }
+    }
     .musicPlayer {
-        width: 500px;
-        height: auto;
-        padding: 10px 0;
-        position: relative;
-        border-radius: 5px;
-        color: white;
-        margin: 0 auto;
-        overflow: hidden; 
-        font-family: "Montserrat", sans-serif;
-        font-size: .9rem;
-        text-align: center;
-        .down-mobile {
-            position: absolute;
-            right: 1rem;
-            top: 10px;
-            cursor: pointer;
-            font-size: 20px;
-            display: none;
-            @include mobile {
-                right: 0.8rem;
-                top: 12px;
-            }
+      width: 100%;
+      height: auto;
+      position: relative;
+      border-radius: 5px;
+      color: white;
+      margin: 0 auto;
+      overflow: hidden; 
+      font-family: "Montserrat", sans-serif;
+      font-size: .9rem;
+      text-align: center;
+      .mobile-icon {
+        position: absolute;
+        top: 10px;
+        cursor: pointer;
+        font-size: 20px;
+        display: none;
+      }
+      .down-mobile {
+        right: 1rem;
+        @include mobile {
+          right: 1rem;
+          top: 14px;
         }
-        @include tablet {
-            .down-mobile {
-                display: block;
-            }
-            width: 100%;
-            transition: .3s all ease;
-            position: fixed;
-            bottom: 65px;
-            left: 0;
-            background: #181818;
-            z-index: 1111111;
-            padding: 1rem;
-            box-sizing: border-box;
-            height: 0;
-            padding: 0;
+      }
+      .queue-list {
+        left: 1rem;
+        @include mobile {
+          left: 1.1rem;
+          top: 14px;
         }
+      }
+      @include tablet {
+          .mobile-icon {
+              display: block;
+          }
+          width: 100%;
+          transition: .3s all ease;
+          position: fixed;
+          bottom: 65px;
+          left: 0;
+          background: #181818;
+          z-index: 1111111;
+          padding: 1rem;
+          box-sizing: border-box;
+          height: 0;
+          padding: 0;
+      }
 
-        p{
-            z-index: 2;
-            position: relative;
-        }
-        p:first-child {
-            margin-bottom: .3rem;
-        }
-        p:last-child {
-            margin-bottom: 1.5rem;
-        }
-
+      p{
+          z-index: 2;
+          position: relative;
+      }
+      p:first-child {
+          margin-bottom: .3rem;
+      }
+      p:last-child {
+          margin-bottom: 1.5rem;
+      }
     }
     @include tablet {
         .active-mobile {
@@ -121,18 +181,10 @@
           }
         }
     }
-    .audio-name {
-        font-size: 1.3em;
-        font-weight: 600;
-    }
-    .author-name {
-        font-size: 0.9em;
-        opacity: 0.6;
-    }
+    
     #progressBar {
         width: 100%;
         height: 5px;
-        margin: 0 0 15px 0;
         background: #ffffff33;
         position: relative;
         z-index: 2;
@@ -141,6 +193,7 @@
     #playbackProgress {
         position: absolute;
         top: 0;
+        left: 0;
         height: 100%;
         width: 0;
         transition: .3s all ease;
@@ -309,6 +362,37 @@
         div:last-child {
             float: right;
         }
+    }
+    .queue-container {
+      opacity: 0;
+      visibility: hidden;
+      position: fixed;
+      z-index: 10000000;
+      left: 0;
+      height: 100%;
+      top: 100%;
+      background: #000;
+      overflow: auto;
+      padding: .5rem;
+      transition: .3s all;
+      .mobile-icon {
+        position: absolute;
+        top: 10px;
+        cursor: pointer;
+        font-size: 20px;
+      }
+      .down-mobile {
+        right: 1rem;
+        @include mobile {
+          right: 1rem;
+          top: 14px;
+        }
+      }
+    }
+    .queue-active {
+      opacity: 1;
+      top: 0;
+      visibility: visible;
     }
 }
 @keyframes rotation {

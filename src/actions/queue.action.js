@@ -1,13 +1,20 @@
-export const setQueueAction = (queue) => {
+export const setPlaylistAction = (playlist) => {
   return {
-    type: 'QUEUE',
-    payload: queue
+    type: 'PLAYLIST',
+    payload: playlist
   };
 };
 
-export const setQueueItemAction = (data) => {
+export const setSongsPlaylistAction = (data) => {
   return {
-    type: 'QUEUE_ITEM',
+    type: 'PLAYLIST_ITEM',
+    payload: data
+  };
+};
+
+export const setPlaylistNameAction = (data) => {
+  return {
+    type: 'PLAYLIST_NAME',
     payload: data
   };
 };
