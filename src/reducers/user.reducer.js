@@ -1,17 +1,26 @@
-const initialState = {
-  email: null,
-  name: null,
-  password: null,
-  currentPlaylist: null,
-  queueListId: null,
-  _id: null
-};
-const userReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'USER':
-      return action.payload;
-    default:
-      return state;
+import { createSlice } from "@reduxjs/toolkit";
+
+const userReducer = createSlice({
+  name: 'user',
+  initialState: {
+    email: null,
+    name: null,
+    password: null,
+    currentPlaylist: null,
+    queueListId: null,
+    _id: null
+  },
+  reducers: {
+    setUserAction: (state, action) => {
+      state.email = action.payload.email;
+      state.name = action.payload.name;
+      state.currentPlaylist = action.payload.currentPlaylist;
+      state.queueListId = action.payload.queueListId;
+      state._id = action.payload._id;
+    }
   }
-};
-export default userReducer;
+});
+
+const { actions, reducer } = userReducer;
+export const { setUserAction } = actions;
+export default reducer;

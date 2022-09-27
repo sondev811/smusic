@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
-import { setPlaylistAction } from '../../actions/queue.action';
-import { setUserAction } from '../../actions/user.action';
 import { useAppDispatch, useOutside } from '../../hooks';
+import { setPlaylistAction } from '../../reducers/queue.reducer';
+import { setUserAction } from '../../reducers/user.reducer';
 import authService from '../../services/auth.service';
 import musicService from '../../services/music.service';
 import userService from '../../services/user.service';
@@ -20,7 +20,7 @@ function User() {
       let response = await userService.getUserInfo();
       if (!response || !response.result || !response.result.userInfo || !response.result.queue) return;
       setUserInfo(response.result.userInfo);
-      dispatch(setUserAction(response.result));
+      dispatch(setUserAction(response.result.userInfo));
       const list = response.result.queue.list;
       const playlistId = response.result.queue._id;
       let currentMusic = response.result.queue.currentMusic;

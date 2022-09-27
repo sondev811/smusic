@@ -1,15 +1,17 @@
-const initialState = {
-  isTyping: false
-};
-const searchReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'TYPING':
-      return {
-        ...state,
-        isTyping: action.payload
-      };
-    default:
-      return state;
+import { createSlice } from "@reduxjs/toolkit";
+
+const searchReducer = createSlice({
+  name: 'search',
+  initialState: {
+    isTyping: false
+  },
+  reducers: {
+    setSearchTypingAction: (state, action) => {
+      state.isTyping = action.payload;
+    }
   }
-};
-export default searchReducer;
+})
+
+const { actions, reducer } = searchReducer;
+export const { setSearchTypingAction } = actions;
+export default reducer;

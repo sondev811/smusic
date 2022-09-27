@@ -1,8 +1,8 @@
 import axios from 'axios';
 import store from '../store';
 import { http } from '../constants/api.constant';
-import { setLoadingAction } from '../actions/loading.action';
 import authService from './auth.service';
+import { setLoadingAction } from '../reducers/loading.reducer';
 
 class HttpClient {
   timeout(ms) {

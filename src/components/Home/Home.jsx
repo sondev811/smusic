@@ -1,10 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
-import {
-  setPlaylistAction,
-  setSongsPlaylistAction
-} from '../../actions/queue.action';
 import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
+import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
 import { getTrending } from '../../services';
 import musicService from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';

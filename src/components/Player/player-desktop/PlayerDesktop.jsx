@@ -8,8 +8,6 @@ import {
 } from 'react-icons/bs';
 import { MdOutlineQueueMusic, MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
-import { setVolumeAction } from '../../../actions/player.action';
-import { setCurrentMusicAction } from '../../../actions/queue.action';
 import { LoopType } from '../../../constants/player';
 import {
   currentMusicStore,
@@ -22,6 +20,8 @@ import {
   useEventListener,
   useOutside
 } from '../../../hooks';
+import { setVolumeAction } from '../../../reducers/player.reducer';
+import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
 import musicService from '../../../services/music.service';
 import Toast from '../../Toast/Toast';
 import '../Player.scss';

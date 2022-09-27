@@ -4,15 +4,12 @@ import { BsFillPlayFill } from 'react-icons/bs';
 import { CgPlayListRemove } from 'react-icons/cg';
 import { HiMenuAlt4 } from 'react-icons/hi';
 import {
-  setCurrentMusicAction,
-  setSongsPlaylistAction
-} from '../../actions/queue.action';
-import {
   currentMusicStore,
   playlistItemStore, playlistStore,
   useAppDispatch,
   useAppSelector
 } from '../../hooks';
+import { setCurrentMusicAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
 import musicService from '../../services/music.service';
 import Toast from '../Toast/Toast';
 import './Queue.scss';

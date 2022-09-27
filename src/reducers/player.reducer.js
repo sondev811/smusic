@@ -1,15 +1,16 @@
-const initialState = {
-  volume: 0.5
-};
-const playerReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'SET_VOLUME':
-      return {
-        ...state,
-        volume: action.payload
-      };
-    default:
-      return state;
+import { createSlice } from "@reduxjs/toolkit";
+
+const playerReducer = createSlice({
+  name: 'player',
+  initialState: {
+    volume: 0.5
+  },
+  reducers: {
+    setVolumeAction: (state, action) => {
+      state.volume = action.payload;
+    }
   }
-};
-export default playerReducer;
+});
+const { actions, reducer} = playerReducer;
+export const { setVolumeAction } = actions;
+export default reducer;

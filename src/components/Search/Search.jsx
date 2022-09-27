@@ -1,13 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
-import { setLoadingAction } from '../../actions/loading.action';
-import {
-  setPlaylistAction,
-  setSongsPlaylistAction
-} from '../../actions/queue.action';
-import { setSearchTypingAction } from '../../actions/search.action';
 import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
+import { setLoadingAction } from '../../reducers/loading.reducer';
+import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
+import { setSearchTypingAction } from '../../reducers/search.reducer';
 import { search } from '../../services';
 import musicService from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';

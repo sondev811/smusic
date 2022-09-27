@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiPlusCircle } from 'react-icons/bi';
 import { CgPlayListRemove } from 'react-icons/cg';
-import { setPlaylistAction } from '../../actions/queue.action';
 import { playlistStore, useAppDispatch, useAppSelector, userStore } from '../../hooks';
+import { setPlaylistAction } from '../../reducers/queue.reducer';
 import musicService from '../../services/music.service';
 import Toast from '../Toast/Toast';
 import './Playlist.scss';
@@ -147,8 +147,8 @@ function Playlist() {
                 <div className={`playlist__list--item `} onClick={() => getSongFromPlaylist(element)}>
                   <div>{element.playlistName}({element.list.length})</div>
                 </div>
-                <div className={`playlist__list--remove ${user && user.userInfo && 
-                  user.userInfo.queueListId && user.userInfo.queueListId === element._id ? 'disable-delete' : ''}`}>
+                <div className={`playlist__list--remove ${user && 
+                  user.queueListId && user.queueListId === element._id ? 'disable-delete' : ''}`}>
                   <CgPlayListRemove onClick={() => removeItem(element)} />
                 </div>
               </div>

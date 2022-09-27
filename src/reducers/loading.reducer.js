@@ -1,17 +1,18 @@
-const initialState = {
-  isLoading: false,
-  content: ''
-};
-const loadingReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'LOADING':
-      return {
-        ...state,
-        isLoading: action.payload.isLoading,
-        content: action.payload.content
-      };
-    default:
-      return state;
+import { createSlice } from "@reduxjs/toolkit";
+
+const loadingReducer = createSlice({
+  name: 'loading',
+  initialState: {
+    isLoading: false,
+    content: ''
+  },
+  reducers: {
+    setLoadingAction: (state, action) => {
+      state.isLoading = action.payload.isLoading;
+      state.content = action.payload.content;
+    }
   }
-};
-export default loadingReducer;
+});
+const { actions, reducer } = loadingReducer;
+export const { setLoadingAction } = actions;
+export default reducer;

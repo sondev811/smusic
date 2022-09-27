@@ -9,8 +9,6 @@ import {
   BsPauseFill
 } from 'react-icons/bs';
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
-import { setVolumeAction } from '../../../actions/player.action';
-import { setCurrentMusicAction } from '../../../actions/queue.action';
 import { colors, LoopType } from '../../../constants/player';
 import {
   currentMusicStore,
@@ -23,6 +21,8 @@ import {
   useEventListener,
   useOutside
 } from '../../../hooks';
+import { setVolumeAction } from '../../../reducers/player.reducer';
+import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
 import musicService from '../../../services/music.service';
 import Queue from '../../Queue/Queue';
 import Toast from '../../Toast/Toast';
