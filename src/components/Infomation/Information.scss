@@ -1,0 +1,28 @@
+@import '../../scss/mixin.scss';
+.information {
+  @include mobile {
+    padding: 1rem;
+    padding-bottom: 0;
+    padding-top: 17px;
+  }
+  h3 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -.04em;
+    line-height: 28px;
+    text-transform: none;
+    margin-top: 0px;
+    @include mobile {
+        margin-top: 5px;
+    }
+  }
+  a {
+    color: #fff;
+    margin-left: 10px;
+    transition: .3s all;
+    text-decoration: none;
+    &:hover {
+      color: #1db954;
+    }
+  }
+}

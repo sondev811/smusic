@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AiFillCaretDown } from 'react-icons/ai';
 import { BiUserCircle } from 'react-icons/bi';
+import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useOutside } from '../../hooks';
 import { setPlaylistAction } from '../../reducers/queue.reducer';
 import { setUserAction } from '../../reducers/user.reducer';
@@ -65,6 +66,11 @@ function User() {
         </span>
         <div className={`user__name--child ${isOpenUser ? 'active' : ''}`}>
           <ul>
+            <li onClick={() => setOpenUser(false)}>
+              <NavLink to="/information">
+                Thông tin ứng dụng
+              </NavLink>
+            </li>
             <li onClick={logout}>Đăng xuất</li>
           </ul>
         </div>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './components/Home/Home';
+import Information from './components/Infomation/Information';
 import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
 import Playlist from './components/Playlist/Playlist';
@@ -22,6 +23,7 @@ ReactDOM.render(
           <Route exact path="search" element={<Search />} />
           <Route exact path="queue" element={<Queue closeQueue={() => { console.log("Playing")}} />} />
           <Route exact path="playlist" element={<Playlist />} />
+          <Route exact path="information" element={<Information />} />
         </Route>
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/login" element={<Login />} />
