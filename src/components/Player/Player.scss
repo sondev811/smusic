@@ -67,21 +67,51 @@
         font-size: 1em;
         font-weight: 600;
         text-align: left;
-        text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
-        width: 230px;
+        padding-left: .5rem;
       }
       .author-name {
         font-size: 0.9em;
         text-align: left;
         opacity: 0.6;
+        padding-left: .5rem;
       }
       &--song-info {
         padding: 0 1rem;
         @include flex(center, center);
         div {
           padding: 0 .5rem;
+        }
+        .active-width {
+          width: 230px;
+        }
+        .active-move {
+          animation-duration: 17s;
+          animation-name: nameMoving;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+          animation-timing-function: linear;
+        }
+        // @keyframes nameMoving {
+        //   0%    { transform: translateX(0) }
+        //   10%   { transform: translateX(-46px) }
+        //   20%   { transform: translateX(-92px) }
+        //   30%   { transform: translateX(-138px) }
+        //   40%   { transform: translateX(-184px) }
+        //   50%   { transform: translateX(-230px) }
+        //   60%   { transform: translateX(-184px) }
+        //   70%   { transform: translateX(-138px) }
+        //   80%   { transform: translateX(-92px) }
+        //   90%   { transform: translateX(-46px) }
+        //   100%  { transform: translateX(0) }
+        // }
+        div:last-child {
+          mask-image: linear-gradient(90deg,transparent 0,#000 6px,#000 calc(100% - 20px),transparent);
+          -webkit-mask-image: linear-gradient(90deg,transparent 0,#000 6px,#000 calc(100% - 20px),transparent);
+          justify-self: start;
+          padding: 0;
+          padding-inline-end: 12px;
+          padding-inline-start: 6px;
         }
         img {
           width: 80px;

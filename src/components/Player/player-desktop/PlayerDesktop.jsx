@@ -80,7 +80,6 @@ const PlayerDesktop = () => {
   );
 
   useEventListener('keydown', handlePressSpace);
-
   useEffect(() => {
     const getMusicUrl = async () => {
       if (!currentMusic || !currentMusic.youtubeId) return;
@@ -240,6 +239,7 @@ const PlayerDesktop = () => {
     player.addEventListener('play', play);
     player.addEventListener('pause', pause);
     player.addEventListener('volumechange', volumeChange);
+    movingSongName();
     return () => {
       if (!player) return;
       player.removeEventListener('ended', ended);
@@ -307,6 +307,29 @@ const PlayerDesktop = () => {
     player.currentTime = percent * player.duration;
     progressPlay.style.width = Math.floor(percent * 100) + '%';
   };
+
+  const movingSongName = () => {
+    const songName = document.getElementsByClassName('audio-name');
+    const songInfo = document.getElementsByClassName('song-info-container');
+    console.log(songName);
+    console.log(songInfo);
+    if (!songName || !songName.length || !songInfo || !songInfo.length) return;
+    songInfo[0].classList.remove('active-width');
+    const nameWidth = songName['0'].offsetWidth;
+    if (nameWidth >= 230) {
+      const movingWidth = nameWidth - 230;
+      const cssAnimation = document.createElement('style');
+      cssAnimation.type = 'text/css';
+      const rules = document.createTextNode(`@-webkit-keyframes nameMoving {
+        from { transform: translateX(0); }
+        to { transform: translateX(-${movingWidth}px); }
+      });`);
+      cssAnimation.appendChild(rules);
+      document.getElementsByTagName("head")[0].appendChild(cssAnimation);
+      songInfo[0].classList.add('active-width');
+      songName[0].classList.add('active-move');
+    }
+  }
 
   //Event volume
   const handleVolume = (event) => {
@@ -459,7 +482,7 @@ const PlayerDesktop = () => {
                 <div>
                   <img src={currentMusic.audioThumb} alt="" />
                 </div>
-                <div>
+                <div className='song-info-container active-width'>
                   <p className="audio-name">{currentMusic.name}</p>
                   <p className="author-name">{currentMusic.authorName}</p>
                 </div>
