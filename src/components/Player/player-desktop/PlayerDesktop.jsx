@@ -311,10 +311,9 @@ const PlayerDesktop = () => {
   const movingSongName = () => {
     const songName = document.getElementsByClassName('audio-name');
     const songInfo = document.getElementsByClassName('song-info-container');
-    console.log(songName);
-    console.log(songInfo);
     if (!songName || !songName.length || !songInfo || !songInfo.length) return;
     songInfo[0].classList.remove('active-width');
+    songName[0].classList.remove('active-move');
     const nameWidth = songName['0'].offsetWidth;
     if (nameWidth >= 230) {
       const movingWidth = nameWidth - 230;
