@@ -94,6 +94,7 @@ const PlayerDesktop = () => {
       const response = await musicService.getMusicUrl(currentMusic.youtubeId);
       if (!response || !response.result || !response.result.url) return;
       setMusicUrl(response.result.url);
+      console.log(response.result.url, 'get music url api');
     };
     getMusicUrl();
   }, [currentMusic]);
@@ -169,6 +170,7 @@ const PlayerDesktop = () => {
     const setDuration = () => {
       if (!musicPlayer.current || !musicPlayer.current.duration) return;
       const duration = formatDuration(musicPlayer.current.duration);
+      console.log(duration, 'duration function')
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
     };
 
@@ -197,6 +199,7 @@ const PlayerDesktop = () => {
 
     const play = () => {
       setPlay(true);
+      console.log(currentMusic, 'play function');
       navigator.mediaSession.metadata = new window.MediaMetadata({
         title: currentMusic.name,
         artist: currentMusic.authorName,
@@ -232,6 +235,7 @@ const PlayerDesktop = () => {
     const player = musicPlayer.current;
     const minuteDom = document.getElementById('minutes');
     const secondDom = document.getElementById('seconds');
+    console.log(player, 'player');
     player.load();
     const source = document.getElementById('music-source');
     source.addEventListener('error', error);
@@ -382,6 +386,7 @@ const PlayerDesktop = () => {
   //Event Play
   const onClickPlay = () => {
     const player = musicPlayer.current;
+    console.log(player, 'onClickPlay');
     if (!player) return;
     if (isPlaying) {
       if (!player.paused) {
