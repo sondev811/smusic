@@ -94,6 +94,8 @@ const PlayerDesktop = () => {
       const response = await musicService.getMusicUrl(currentMusic.youtubeId);
       if (!response || !response.result || !response.result.url) return;
       setMusicUrl(response.result.url);
+      console.log(response.result.type, 'type');
+      console.log(response.result.quality, 'quality');
       console.log(response.result.url, 'url');
     };
     getMusicUrl();
@@ -170,7 +172,6 @@ const PlayerDesktop = () => {
     const setDuration = () => {
       if (!musicPlayer.current || !musicPlayer.current.duration) return;
       const duration = formatDuration(musicPlayer.current.duration);
-      console.log(duration, 'duration function')
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
     };
 
@@ -213,7 +214,6 @@ const PlayerDesktop = () => {
     };
 
     const error = (e) => {
-      console.log(errObj[e.currentTarget.error.code]);
       setToast({
         isShow: true,
         status: false,
@@ -225,7 +225,7 @@ const PlayerDesktop = () => {
       1: "Không thể tải bài hát. Hãy fresh lại trang!!!",
       2: "Lỗi mạng. Hãy fresh lại trang!!!",
       3: "Không thể decode. Hãy fresh lại trang!!!",
-      4: "Dạng nhạc không hỗ trợ. Hãy fresh lại trang"
+      4: "Dạng nhạc không hỗ trợ. Hãy fresh lại trang!!!"
     }
 
     const volumeChange = () => {
