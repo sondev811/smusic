@@ -94,7 +94,7 @@ const PlayerDesktop = () => {
       const response = await musicService.getMusicUrl(currentMusic.youtubeId);
       if (!response || !response.result || !response.result.url) return;
       setMusicUrl(response.result.url);
-      console.log(response.result.url, 'get music url api');
+      console.log(response.result.url, 'url');
     };
     getMusicUrl();
   }, [currentMusic]);
@@ -199,7 +199,6 @@ const PlayerDesktop = () => {
 
     const play = () => {
       setPlay(true);
-      console.log(currentMusic, 'play function');
       navigator.mediaSession.metadata = new window.MediaMetadata({
         title: currentMusic.name,
         artist: currentMusic.authorName,
@@ -213,13 +212,21 @@ const PlayerDesktop = () => {
       setPlay(false);
     };
 
-    const error = () => {
+    const error = (e) => {
+      console.log(errObj[e.currentTarget.error.code]);
       setToast({
         isShow: true,
         status: false,
-        message: 'Không thể tải bài hát. Hãy fresh lại trang!!!'
+        message: errObj[e.currentTarget.error.code]
       });
     };
+
+    const errObj = {
+      1: "Không thể tải bài hát. Hãy fresh lại trang!!!",
+      2: "Lỗi mạng. Hãy fresh lại trang!!!",
+      3: "Không thể decode. Hãy fresh lại trang!!!",
+      4: "Dạng nhạc không hỗ trợ. Hãy fresh lại trang"
+    }
 
     const volumeChange = () => {
       dispatch(setVolumeAction(player.volume));
@@ -235,10 +242,9 @@ const PlayerDesktop = () => {
     const player = musicPlayer.current;
     const minuteDom = document.getElementById('minutes');
     const secondDom = document.getElementById('seconds');
-    console.log(player, 'player');
     player.load();
-    const source = document.getElementById('music-source');
-    source.addEventListener('error', error);
+    const musicP = document.getElementById('musicPlayer');
+    musicP.addEventListener('error', error, true);
     player.volume = volumeStore;
     setVolumeValue(volumeStore * 100);
     setHandleMetaData();
@@ -386,7 +392,6 @@ const PlayerDesktop = () => {
   //Event Play
   const onClickPlay = () => {
     const player = musicPlayer.current;
-    console.log(player, 'onClickPlay');
     if (!player) return;
     if (isPlaying) {
       if (!player.paused) {
@@ -470,12 +475,9 @@ const PlayerDesktop = () => {
             autoPlay
             preload="none"
             style={{ display: 'none' }}
+            src={musicUrl ? musicUrl : null}
+            type="audio/mpeg"
           >
-            <source
-              id="music-source"
-              src={musicUrl ? musicUrl : null}
-              type="audio/mpeg"
-            />
           </audio>
             <div
               className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}
