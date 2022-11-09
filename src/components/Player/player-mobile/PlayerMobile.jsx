@@ -169,8 +169,18 @@ const PlayerDesktop = () => {
       progressEndMusic(nextMusic);
     };
 
+    const isiOSSystem = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+  }
+
     const setDuration = () => {
       if (!musicPlayer.current || !musicPlayer.current.duration) return;
+      let handleDuration = musicPlayer.current.duration;
+      if (isiOSSystem()) {
+        console.log('iOS');
+        handleDuration = handleDuration / 2;
+      }
       console.log('----loadeddata----');
       console.log(musicPlayer.current.duration, 'total duration');
       const duration = formatDuration(musicPlayer.current.duration);
@@ -259,14 +269,6 @@ const PlayerDesktop = () => {
     }
     player.addEventListener('ended', ended);
     player.addEventListener('loadeddata', setDuration);
-    player.addEventListener('loadedmetadata', () => {
-      if (!musicPlayer.current || !musicPlayer.current.duration) return;
-      console.log('----loadedmetadata----');
-      console.log(musicPlayer.current.duration, 'total duration');
-      const duration = formatDuration(musicPlayer.current.duration);
-      console.log(duration.minutes, typeof duration.minutes, 'minutes');
-      console.log(duration.seconds, typeof duration.seconds ,'seconds');
-    });
     player.addEventListener('timeupdate', updateProgressBar);
     player.addEventListener('play', play);
     player.addEventListener('pause', pause);
