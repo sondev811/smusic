@@ -176,9 +176,14 @@ const PlayerDesktop = () => {
 
     const setDuration = () => {
       if (!player || !player.duration) return;
+      let handleDuration = musicPlayer.current.duration;
+      if (isiOSSystem()) {
+        console.log('iOS');
+        handleDuration = handleDuration / 2;
+      }
       console.log('----loadeddata----');
-      console.log(player.duration, 'total duration');
-      const duration = formatDuration(player.duration);
+      console.log(handleDuration, 'total duration');
+      const duration = formatDuration(handleDuration);
       console.log(duration.minutes, typeof duration.minutes, 'minutes');
       console.log(duration.seconds, typeof duration.seconds ,'seconds');
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
@@ -196,14 +201,22 @@ const PlayerDesktop = () => {
       const { minutes, seconds } = formatDuration(player.currentTime);
       minuteDom.innerHTML = minutes;
       secondDom.innerHTML = seconds;
+      let duration = player.duration;
+      if (isiOSSystem()) {
+        duration = duration / 2;
+      }
       const percentage = Math.floor(
-        (100 / player.duration) * player.currentTime
+        (100 / duration) * player.currentTime
       );
       if (playbackProgress && playbackProgress.current) {
         playbackProgress.current.style.width = percentage + '%';
       }
       if (playbackProgressMobile && playbackProgressMobile.current) {
         playbackProgressMobile.current.style.width = percentage + '%';
+      }
+      if (isiOSSystem() && player.currentTime === duration) {
+        ended();
+        return;
       }
     };
 
@@ -261,10 +274,6 @@ const PlayerDesktop = () => {
     if (minuteDom && secondDom) {
       minuteDom.innerHTML = '00';
       secondDom.innerHTML = '00';
-    }
-    if (isiOSSystem()) {
-      player.duration = player.duration / 2;
-      console.log('Detect ios system: ', player.duration);
     }
     player.addEventListener('ended', ended);
     player.addEventListener('loadeddata', setDuration);
@@ -334,9 +343,13 @@ const PlayerDesktop = () => {
       !player.currentTime | !player.duration
     )
       return;
+    let duration = player.duration;
+    if (isiOSSystem()) {
+      duration = duration / 2;
+    }
     const position = event.clientX - progress.getBoundingClientRect().left;
     const percent = position / progress.offsetWidth;
-    player.currentTime = percent * player.duration;
+    player.currentTime = percent * duration;
     progressPlay.style.width = Math.floor(percent * 100) + '%';
   };
 
