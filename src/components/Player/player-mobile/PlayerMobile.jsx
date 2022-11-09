@@ -206,7 +206,7 @@ const PlayerDesktop = () => {
         duration = duration / 2;
       }
       const percentage = Math.floor(
-        (100 / player.duration) * player.currentTime
+        (100 / duration) * player.currentTime
       );
       if (playbackProgress && playbackProgress.current) {
         playbackProgress.current.style.width = percentage + '%';
