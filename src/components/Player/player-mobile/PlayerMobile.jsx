@@ -171,7 +171,11 @@ const PlayerDesktop = () => {
 
     const setDuration = () => {
       if (!musicPlayer.current || !musicPlayer.current.duration) return;
+      console.log('----loadeddata----');
+      console.log(musicPlayer.current.duration, 'total duration');
       const duration = formatDuration(musicPlayer.current.duration);
+      console.log(duration.minutes, typeof duration.minutes, 'minutes');
+      console.log(duration.seconds, typeof duration.seconds ,'seconds');
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
     };
 
@@ -254,7 +258,15 @@ const PlayerDesktop = () => {
       secondDom.innerHTML = '00';
     }
     player.addEventListener('ended', ended);
-    player.addEventListener('loadedmetadata', setDuration);
+    player.addEventListener('loadeddata', setDuration);
+    player.addEventListener('loadedmetadata', () => {
+      if (!musicPlayer.current || !musicPlayer.current.duration) return;
+      console.log('----loadedmetadata----');
+      console.log(musicPlayer.current.duration, 'total duration');
+      const duration = formatDuration(musicPlayer.current.duration);
+      console.log(duration.minutes, typeof duration.minutes, 'minutes');
+      console.log(duration.seconds, typeof duration.seconds ,'seconds');
+    });
     player.addEventListener('timeupdate', updateProgressBar);
     player.addEventListener('play', play);
     player.addEventListener('pause', pause);
@@ -262,12 +274,12 @@ const PlayerDesktop = () => {
     return () => {
       if (!player) return;
       player.removeEventListener('ended', ended);
-      player.removeEventListener('loadedmetadata', setDuration);
+      player.removeEventListener('loadeddata', setDuration);
       player.removeEventListener('timeupdate', updateProgressBar);
       player.removeEventListener('play', play);
       player.removeEventListener('pause', pause);
       player.removeEventListener('volumechange', volumeChange);
-      player.removeEventListener('error', error);
+      musicP.removeEventListener('error', error);
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('previoustrack', null);
@@ -304,9 +316,9 @@ const PlayerDesktop = () => {
 
   const formatDuration = (time) => {
     let minutes = Math.floor(time / 60);
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    let seconds = Math.floor(time - minutes * 60);
-    seconds = seconds < 10 ? '0' + seconds : seconds;
+    minutes = minutes < 10 ? `0${minutes}` : minutes;
+    let seconds = Math.floor(time - (minutes * 60));
+    seconds = seconds < 10 ? `0${seconds}` : seconds;
     return { minutes, seconds };
   };
 
