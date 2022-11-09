@@ -169,11 +169,6 @@ const PlayerDesktop = () => {
       progressEndMusic(nextMusic);
     };
 
-    const isiOSSystem = () => {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-  }
-
     const setDuration = () => {
       if (!player || !player.duration) return;
       let handleDuration = musicPlayer.current.duration;
@@ -331,6 +326,11 @@ const PlayerDesktop = () => {
     seconds = seconds < 10 ? `0${seconds}` : seconds;
     return { minutes, seconds };
   };
+
+  const isiOSSystem = () => {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+  }
 
   const handleProgressBar = (event) => {
     const player = musicPlayer.current;
