@@ -272,7 +272,7 @@ const PlayerDesktop = () => {
       secondDom.innerHTML = '00';
     }
     player.addEventListener('ended', ended);
-    player.addEventListener('loadeddata', setDuration);
+    player.addEventListener('loadedmetadata', setDuration);
     player.addEventListener('timeupdate', updateProgressBar);
     player.addEventListener('play', play);
     player.addEventListener('pause', pause);
@@ -280,7 +280,7 @@ const PlayerDesktop = () => {
     return () => {
       if (!player) return;
       player.removeEventListener('ended', ended);
-      player.removeEventListener('loadeddata', setDuration);
+      player.removeEventListener('loadedmetadata', setDuration);
       player.removeEventListener('timeupdate', updateProgressBar);
       player.removeEventListener('play', play);
       player.removeEventListener('pause', pause);
@@ -502,9 +502,11 @@ const PlayerDesktop = () => {
             autoPlay
             preload="none"
             style={{ display: 'none' }}
-            src={musicUrl ? musicUrl : null}
-            type="audio/mp4"
-          >
+            >
+            <source 
+              src={musicUrl ? musicUrl : null}
+              type="audio/mp4"
+            />
           </audio>
             <div
               className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}
