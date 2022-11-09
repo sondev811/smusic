@@ -182,8 +182,8 @@ const PlayerDesktop = () => {
         handleDuration = handleDuration / 2;
       }
       console.log('----loadeddata----');
-      console.log(musicPlayer.current.duration, 'total duration');
-      const duration = formatDuration(musicPlayer.current.duration);
+      console.log(handleDuration, 'total duration');
+      const duration = formatDuration(handleDuration);
       console.log(duration.minutes, typeof duration.minutes, 'minutes');
       console.log(duration.seconds, typeof duration.seconds ,'seconds');
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
