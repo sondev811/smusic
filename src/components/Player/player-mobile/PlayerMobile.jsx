@@ -209,7 +209,7 @@ const PlayerDesktop = () => {
       if (playbackProgressMobile && playbackProgressMobile.current) {
         playbackProgressMobile.current.style.width = percentage + '%';
       }
-      if (isiOSSystem() && player.currentTime === duration) {
+      if (isiOSSystem() && player.currentTime >= duration) {
         ended();
         return;
       }
