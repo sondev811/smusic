@@ -172,7 +172,7 @@ const PlayerDesktop = () => {
     const setDuration = () => {
       if (!player || !player.duration) return;
       let handleDuration = musicPlayer.current.duration;
-      console.log(handleDuration, 'before handled')
+      console.log(handleDuration, 'before handle');
       if (isiOSSystem()) {
         console.log('iOS');
         handleDuration = handleDuration / 2;
@@ -502,12 +502,9 @@ const PlayerDesktop = () => {
             autoPlay
             preload="none"
             style={{ display: 'none' }}
-            >
-            <source
-              id="music-source"
-              src={musicUrl ? musicUrl : null}
-              type="audio/mpeg"
-            />
+            src={musicUrl ? musicUrl : null}
+            type="audio/mp4"
+          >
           </audio>
             <div
               className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}

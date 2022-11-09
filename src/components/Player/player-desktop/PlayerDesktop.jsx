@@ -472,7 +472,7 @@ const PlayerDesktop = () => {
             <source
               id="music-source"
               src={musicUrl ? musicUrl : null}
-              type="audio/mpeg"
+              type="audio/mp4"
             />
           </audio>
           <div className="musicPlayer" >
