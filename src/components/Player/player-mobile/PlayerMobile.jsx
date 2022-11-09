@@ -201,6 +201,10 @@ const PlayerDesktop = () => {
       const { minutes, seconds } = formatDuration(player.currentTime);
       minuteDom.innerHTML = minutes;
       secondDom.innerHTML = seconds;
+      let duration = player.duration;
+      if (isiOSSystem()) {
+        duration = duration / 2;
+      }
       const percentage = Math.floor(
         (100 / player.duration) * player.currentTime
       );
