@@ -14,6 +14,9 @@
         box-sizing: border-box;
         background: transparent;
     }
+    @include mobile {
+      padding-bottom: 0;
+    }
     &__mobile {
         background: rgb(184, 72, 56);
         border-radius: 3px;
@@ -417,6 +420,19 @@
           right: 1rem;
           top: 14px;
         }
+      }
+      .queue__header {
+        @include tablet {
+          padding-left: 1rem;
+          padding-top: 1rem;
+        }
+        @include mobile {
+          padding-top: 0;
+        }
+      }
+      @include tablet {
+        width: 100%;
+        padding: 0;
       }
     }
     .queue-active {
