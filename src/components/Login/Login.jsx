@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import { RiNeteaseCloudMusicLine } from 'react-icons/ri';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../hooks';
-import { setLoadingAction } from '../../reducers/loading.reducer';
 import authService from '../../services/auth.service';
 import Loading from '../Loading/Loading';
 import './Login.scss';
 function Login() {
-  const dispatch = useAppDispatch();
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState('');
@@ -28,11 +25,6 @@ function Login() {
       password
     };
     setErrors('');
-    setTimeout(() => {
-      dispatch(
-        setLoadingAction({ isLoading: true, content: 'Đang đăng nhập...' })
-      );
-    }, 1);
     const res = await authService.login(body);
     if (!res) {
       return;

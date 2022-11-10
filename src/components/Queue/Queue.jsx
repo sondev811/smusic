@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { BsFillPlayFill } from 'react-icons/bs';
 import { CgPlayListRemove } from 'react-icons/cg';
 import { HiMenuAlt4 } from 'react-icons/hi';
+import { toast } from "react-toastify";
 import {
   currentMusicStore,
   playlistItemStore, playlistStore,
@@ -11,18 +12,13 @@ import {
 } from '../../hooks';
 import { setCurrentMusicAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
 import musicService from '../../services/music.service';
-import Toast from '../Toast/Toast';
 import './Queue.scss';
+
 function Queue({ closeQueue }) {
   const queues = useAppSelector(playlistItemStore);
   const playlist = useAppSelector(playlistStore);
   const currentMusic = useAppSelector(currentMusicStore);
   const dispatch = useAppDispatch();
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
-  });
   useEffect(() => {
     const setHeightQueue = () => {
       const player = document.getElementsByClassName('player');
@@ -64,15 +60,11 @@ function Queue({ closeQueue }) {
   const removeItem = async (music) => {
     if (!music._id || !playlist || !playlist.playlistId) return;
     const response = await musicService.removeItemPlaylist(music._id, playlist.playlistId);
-    console.log(response);
     if (!response || !response.result || !response.result.queue || !response.result.queue.list) {
+      toast.error('Xóa bài hát khỏi hàng chờ không thành công!!!');
       return;
     }
-    setToast({
-      isShow: true,
-      status: true,
-      message: 'Đã xóa bài hát khỏi hàng chờ!!!'
-    });
+    toast.success('Đã xóa bài hát khỏi hàng chờ!!!');
     dispatch(setSongsPlaylistAction(response.result.queue.list));
   };
 
@@ -188,13 +180,6 @@ function Queue({ closeQueue }) {
           )}
         </Droppable>
       </DragDropContext>
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
-      )}
     </div>
   );
 }

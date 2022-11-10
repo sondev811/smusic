@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RiNeteaseCloudMusicLine } from 'react-icons/ri';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
-import { setLoadingAction } from '../../reducers/loading.reducer';
+import { setLoadingAction, setLoadingDoneAction } from '../../reducers/loading.reducer';
 import authService from '../../services/auth.service';
 import Loading from '../Loading/Loading';
 import './Signup.scss';
@@ -54,12 +54,6 @@ function Signup() {
       passwordNotMatch: false
     });
 
-    dispatch(
-      setLoadingAction({
-        isLoading: true,
-        content: 'Đang đăng ký tài khoản...'
-      })
-    );
     const res = await authService.signUp(body);
     if (!res) {
       return;
@@ -72,12 +66,11 @@ function Signup() {
     }
     dispatch(
       setLoadingAction({
-        isLoading: true,
         content: 'Đăng ký thành công, đang chuyển sang đăng nhập...'
       })
     );
     setTimeout(() => {
-      dispatch(setLoadingAction({ isLoading: false }));
+      dispatch(setLoadingDoneAction({ content: ''}));
       return navigate('/login');
     }, 5000);
   };

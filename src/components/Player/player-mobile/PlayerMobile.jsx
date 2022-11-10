@@ -25,7 +25,7 @@ import { setVolumeAction } from '../../../reducers/player.reducer';
 import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
 import musicService from '../../../services/music.service';
 import Queue from '../../Queue/Queue';
-import Toast from '../../Toast/Toast';
+import { toast } from "react-toastify";
 import '../Player.scss';
 
 const PlayerDesktop = () => {
@@ -63,11 +63,6 @@ const PlayerDesktop = () => {
   const [openPlayer, setOpenPlayer] = useState(false);
   const [pressSpace, setPressSpace] = useState(false);
   const [musicUrl, setMusicUrl] = useState('');
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
-  });
   const [openQueue, setOpenQueue] = useState(false);
 
   const handlePressSpace = useCallback(
@@ -232,11 +227,7 @@ const PlayerDesktop = () => {
     };
 
     const error = (e) => {
-      setToast({
-        isShow: true,
-        status: false,
-        message: errObj[e.currentTarget.error.code]
-      });
+      toast.error(errObj[e.currentTarget.error.code])
     };
 
     const errObj = {
@@ -261,8 +252,6 @@ const PlayerDesktop = () => {
     const minuteDom = document.getElementById('minutes');
     const secondDom = document.getElementById('seconds');
     player.load();
-    const musicP = document.getElementById('musicPlayer');
-    musicP.addEventListener('error', error, true);
     player.volume = volumeStore;
     setVolumeValue(volumeStore * 100);
     setHandleMetaData();
@@ -277,6 +266,7 @@ const PlayerDesktop = () => {
     player.addEventListener('play', play);
     player.addEventListener('pause', pause);
     player.addEventListener('volumechange', volumeChange);
+    player.addEventListener('error', error, true);
     return () => {
       if (!player) return;
       player.removeEventListener('ended', ended);
@@ -285,7 +275,7 @@ const PlayerDesktop = () => {
       player.removeEventListener('play', play);
       player.removeEventListener('pause', pause);
       player.removeEventListener('volumechange', volumeChange);
-      musicP.removeEventListener('error', error);
+      player.removeEventListener('error', error, true);
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('previoustrack', null);
@@ -502,11 +492,9 @@ const PlayerDesktop = () => {
             autoPlay
             preload="none"
             style={{ display: 'none' }}
+            src={musicUrl ? musicUrl : null}
+            type="audio/mp4"
             >
-            <source 
-              src={musicUrl ? musicUrl : null}
-              type="audio/mp4"
-            />
           </audio>
             <div
               className={`musicPlayer ${openPlayer ? 'active-mobile' : ''}`}
@@ -692,13 +680,6 @@ const PlayerDesktop = () => {
         </div>
         {queuesList && queuesList.length && openQueue && <Queue closeQueue={() => setOpenQueue(false)} />}
       </div>
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
-      )}
     </div>
   );
 };

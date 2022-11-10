@@ -2,21 +2,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiPlusCircle } from 'react-icons/bi';
 import { CgPlayListRemove } from 'react-icons/cg';
+import { toast } from "react-toastify";
 import { playlistStore, useAppDispatch, useAppSelector, userStore } from '../../hooks';
 import { setPlaylistAction } from '../../reducers/queue.reducer';
 import musicService from '../../services/music.service';
-import Toast from '../Toast/Toast';
 import './Playlist.scss';
 
 function Playlist() {
   const queues = useAppSelector(playlistStore);
   const user = useAppSelector(userStore);
   const dispatch = useAppDispatch();
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
-  });
   const [playlist, setPlaylist] = useState([]);
   const [isAddPlaylist, setIsAddPlaylist] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
@@ -63,18 +58,10 @@ function Playlist() {
     if (!element._id) return;
     const response = await musicService.removePlaylist(element._id);
     if (!response || !response.status) {
-      setToast({
-        isShow: true,
-        status: false,
-        message: `Xóa playlist ${element.playlistName} không thành công!!!`
-      });
+      toast.error(`Xóa playlist ${element.playlistName} không thành công!!!`);
       return;
     }
-    setToast({
-      isShow: true,
-      status: true,
-      message: `Xóa playlist ${element.playlistName} thành công!!!`
-    });
+    toast.success(`Xóa playlist ${element.playlistName} thành công!!!`);
     getPlaylist();
   };
 
@@ -107,19 +94,11 @@ function Playlist() {
     const result = await musicService.createPlaylist(playlistName);
     setIsAddPlaylist(false);
     if (!result || !result.status) {
-      setToast({
-        isShow: true,
-        status: true,
-        message: `Đã thêm playlist ${playlistName}`
-      });
+      toast.error(`Thêm playlist ${playlistName} không thành công!!!`)
       return;
     }
     getPlaylist();
-    setToast({
-      isShow: true,
-      status: true,
-      message: `Đã thêm playlist ${playlistName}`
-    });
+    toast.success(`Đã thêm playlist ${playlistName}`)
   }
 
   const openAdd = useCallback(() => {
@@ -170,13 +149,6 @@ function Playlist() {
           </div>
         </div> 
       }
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
-      )}
     </div>
   );
 }

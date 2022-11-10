@@ -2,11 +2,11 @@ import http from './http.service';
 import { api } from '../constants/api.constant';
 class Auth {
   async login(body) {
-    return http.post(api.login, body);
+    return http.post(api.login, body, true, 'Đang đăng nhập...');
   }
 
   async signUp(body) {
-    return http.post(api.signup, body);
+    return http.post(api.signup, body, true, 'Đang đăng ký tài khoản...');
   }
 
   logout() {

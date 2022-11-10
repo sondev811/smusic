@@ -2,7 +2,7 @@ import axios from 'axios';
 import store from '../store';
 import { http } from '../constants/api.constant';
 import authService from './auth.service';
-import { setLoadingAction } from '../reducers/loading.reducer';
+import { setLoadingAction, setLoadingDoneAction } from '../reducers/loading.reducer';
 
 class HttpClient {
   timeout(ms) {
@@ -45,12 +45,14 @@ class HttpClient {
     if (!res) {
       store.dispatch(
         setLoadingAction({
-          isLoading: true,
           content: `Không thể kết nối tới máy chủ`
         })
       );
       return;
     }
+    store.dispatch(
+      setLoadingDoneAction()
+    );
     if (res.status === 401) {
       authService.logout();
     } else if (res.status === 404) {
@@ -62,7 +64,7 @@ class HttpClient {
   }
 
   async handleSuccess(res) {
-    store.dispatch(setLoadingAction({ isLoading: false }));
+    store.dispatch(setLoadingDoneAction());
     if (!res.data.success) {
       return {
         error: res.data.error,
@@ -76,14 +78,14 @@ class HttpClient {
     };
   }
 
-  async get(url, params = {}, isLoading = true) {
+  async get(url, params = {}, isLoading = true, loadingContent='') {
     try {
       url = this.getUrl(url, params);
       const options = {
         headers: this.getHeader()
       };
       if (isLoading) {
-        store.dispatch(setLoadingAction({ isLoading: true }));
+        store.dispatch(setLoadingAction({ content: loadingContent }));
       }
       const response = await axios.get(url, options);
       return this.handleSuccess(response);
@@ -92,7 +94,7 @@ class HttpClient {
     }
   }
 
-  async post(url, body, isLoading = false) {
+  async post(url, body, isLoading = false, loadingContent = '') {
     try {
       url = this.getUrl(url, {});
       const options = {
@@ -100,7 +102,7 @@ class HttpClient {
       };
       const bodyParse = JSON.stringify(body);
       if (isLoading) {
-        store.dispatch(setLoadingAction({ isLoading: true }));
+        store.dispatch(setLoadingAction({ content: loadingContent}));
       }
       const response = await axios.post(url, bodyParse, options);
       return this.handleSuccess(response);

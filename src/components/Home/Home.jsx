@@ -6,7 +6,6 @@ import { getTrending } from '../../services';
 import musicService from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
-import Toast from '../Toast/Toast';
 import './Home.scss';
 
 function Home() {
@@ -24,11 +23,6 @@ function Home() {
   const [playlist, setPlaylist] = useState([]);
   const [songInfoActive, setSongInfoActive] = useState(null);
   const [isOpenPlaylist, setIsOpenPlaylist] = useState(false);
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
-  });
   const [isOpenMenu, setOpenMenu] = useState(false);
   const trendingList = useRef(null);
   const menuPlaylist = useRef(null);
@@ -204,14 +198,6 @@ function Home() {
     setIsOpenPlaylist(true);
   }
 
-  const showToast = (status, message) => {
-    setToast({
-      isShow: true,
-      status,
-      message
-    });
-  }
-
   return (
     <div className="trending">
       <div className="trending__header">
@@ -266,15 +252,8 @@ function Home() {
       { isOpenMenu && <MenuPlaylist menuPlaylist={menuPlaylist} contentMenuStyle={contentMenuStyle} 
         openPlaylist={openPlaylist} musicInfo={songInfoActive} playNow={playNow}/>}
       { isOpenPlaylist && <Playlist playlist={playlist} closePlaylist={closePlaylist} 
-        musicInfo={songInfoActive} showToast={showToast}
+        musicInfo={songInfoActive}
       />}
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
-      )}
     </div>
   );
 }

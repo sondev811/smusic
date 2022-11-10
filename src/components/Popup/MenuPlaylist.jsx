@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import { playlistStore, useAppSelector, userStore } from '../../hooks';
 import musicService from '../../services/music.service';
 import "./Popup.scss";

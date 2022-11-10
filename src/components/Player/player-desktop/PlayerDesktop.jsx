@@ -8,6 +8,7 @@ import {
 } from 'react-icons/bs';
 import { MdOutlineQueueMusic, MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
+import { toast } from "react-toastify";
 import { LoopType } from '../../../constants/player';
 import {
   currentMusicStore,
@@ -23,7 +24,6 @@ import {
 import { setVolumeAction } from '../../../reducers/player.reducer';
 import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
 import musicService from '../../../services/music.service';
-import Toast from '../../Toast/Toast';
 import '../Player.scss';
 
 const PlayerDesktop = () => {
@@ -57,11 +57,6 @@ const PlayerDesktop = () => {
   const [activeVolumeMobile, setActiveVolumeMobile] = useState(true);
   const [pressSpace, setPressSpace] = useState(false);
   const [musicUrl, setMusicUrl] = useState('');
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
-  });
 
   const handlePressSpace = useCallback(
     (event) => {
@@ -201,11 +196,7 @@ const PlayerDesktop = () => {
     };
 
     const error = () => {
-      setToast({
-        isShow: true,
-        status: false,
-        message: 'Không thể tải bài hát. Hãy fresh lại trang!!!'
-      });
+      toast.error('Không thể tải bài hát. Hãy fresh lại trang web!!!');
     };
 
     const volumeChange = () => {
@@ -248,7 +239,7 @@ const PlayerDesktop = () => {
       player.removeEventListener('play', play);
       player.removeEventListener('pause', pause);
       player.removeEventListener('volumechange', volumeChange);
-      player.removeEventListener('error', error);
+      source.removeEventListener('error', error);
       navigator.mediaSession.setActionHandler('play', null);
       navigator.mediaSession.setActionHandler('pause', null);
       navigator.mediaSession.setActionHandler('previoustrack', null);
@@ -608,13 +599,6 @@ const PlayerDesktop = () => {
         </div>
       ) : (
         <></>
-      )}
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
       )}
     </div>
   );

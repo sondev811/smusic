@@ -5,7 +5,7 @@ function Loading() {
   const loading = useAppSelector(loadingStore);
   const content = useAppSelector(loadingContentStore);
   return (
-    <div className={`loading ${loading ? 'active' : ''}`}>
+    <div className={`loading ${loading > 0 ? 'active' : ''}`}>
       <div>
         <div className="loader"></div>
         {content && (

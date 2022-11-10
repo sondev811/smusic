@@ -2,14 +2,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
-import { setLoadingAction } from '../../reducers/loading.reducer';
 import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
 import { setSearchTypingAction } from '../../reducers/search.reducer';
 import { search } from '../../services';
 import musicService from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
-import Toast from '../Toast/Toast';
 import './Search.scss';
 function Search() {
   const [searchKey, setSearchKey] = useState('');
@@ -24,11 +22,6 @@ function Search() {
     position: 'absolute', 
     left: 0,
     top: 0
-  });
-  const [toast, setToast] = useState({
-    isShow: false,
-    status: false,
-    message: ''
   });
   const [songInfoActive, setSongInfoActive] = useState(null);
   const [isOpenPlaylist, setIsOpenPlaylist] = useState(false);
@@ -90,11 +83,6 @@ function Search() {
     if (!searchKey) return;
     setNumberOrder(0);
     setItemsPerPage(1);
-    setTimeout(() => {
-      dispatch(
-        setLoadingAction({ isLoading: true, content: 'Đang tìm kiếm...' })
-      );
-    }, 1);
     const response = await search(searchKey);
     setSearchState(response);
     // if (typing.current) clearTimeout(typing.current);
@@ -241,14 +229,6 @@ function Search() {
     dispatch(setSongsPlaylistAction(playlist))
   }
 
-  const showToast = (status, message) => {
-    setToast({
-      isShow: true,
-      status,
-      message
-    });
-  }
-
   return (
     <div className="search">
       <div className="search__header">
@@ -325,15 +305,8 @@ function Search() {
       { isOpenMenu && <MenuPlaylist menuPlaylist={menuPlaylist} contentMenuStyle={contentMenuStyle} 
         openPlaylist={openPlaylist} musicInfo={songInfoActive} playNow={playNow}/>}
       { isOpenPlaylist && <Playlist playlist={playlist} closePlaylist={closePlaylist} 
-        musicInfo={songInfoActive} showToast={showToast}
+        musicInfo={songInfoActive}
       />}
-      {toast.isShow && (
-        <Toast
-          isShow={toast.isShow}
-          status={toast.status}
-          message={toast.message}
-        />
-      )}
     </div>
   );
 }
