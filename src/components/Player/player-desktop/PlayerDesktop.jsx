@@ -79,7 +79,10 @@ const PlayerDesktop = () => {
     const getMusicUrl = async () => {
       if (!currentMusic || !currentMusic.youtubeId) return;
       const response = await musicService.getMusicUrl(currentMusic.youtubeId);
-      if (!response || !response.result || !response.result.url) return;
+      if (!response || !response.result || !response.result.url) {
+        toast.error('Bài hát đã bị xóa khỏi youtube. Hãy xóa bài hát khỏi playlist của bạn!!!');
+        return;
+      };
       setMusicUrl(response.result.url);
     };
     getMusicUrl();
@@ -450,7 +453,7 @@ const PlayerDesktop = () => {
 
   return (
     <div className="player">
-      {currentMusic && currentMusic.youtubeId && musicUrl ? (
+      {currentMusic && currentMusic.youtubeId ? (
         <div>
           <audio
             id="musicPlayer"

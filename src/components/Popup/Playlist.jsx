@@ -11,7 +11,7 @@ function Playlist(props) {
     musicInfo && musicInfo.id && musicInfo.id.videoId;
     if (!youtubeId || !id) return;
     const res = await musicService.insertSongPlaylist(id, youtubeId);
-    if (!res ||  !res.status) {
+    if (!res || !res.result || !res.status) {
       toast.error('Thêm bài hát vào playlist thất bại.');
       closePlaylist();
       return;

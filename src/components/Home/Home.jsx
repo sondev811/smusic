@@ -34,6 +34,7 @@ function Home() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    // C1: tách nhỏ từng function => dễ debug
     const getTrendingYoutube = async () => {
       const response = await getTrending();
       setSearchState(response);
@@ -45,6 +46,32 @@ function Home() {
     };
     getTrendingYoutube();
     getPlaylist();
+    //C2:
+    // const fetchData = async () =>{
+    //   const trendingPromise = getTrending();
+    //   const playlistPromise = musicService.getPlaylist(false); // api 2 k phụ thuộc api trên nên cho 2 api gọi đồng thời
+    //   const trending = await trendingPromise;
+    //   const playlist = await playlistPromise;
+    //   setSearchState(trending);
+    //   if (!playlist || !playlist.result || !playlist.result.playlist) return;
+    //   setPlaylist(playlist.result.playlist);
+    // }
+    // fetchData();
+    // Nâng cấp C2
+    // const fetchData = async () => {
+    //   console.time();
+    //   const trendingPromise = getTrending();
+    //   const playlistPromise = musicService.getPlaylist(false);
+    //   const [trendingData, playlistData] = await Promise.all([
+    //      trendingPromise,
+    //      playlistPromise
+    //    ]);
+    //   setSearchState(trendingData);
+    //   if (!playlistData || !playlistData.result || !playlistData.result.playlist) return;
+    //   setPlaylist(playlistData.result.playlist);
+    //   console.timeEnd();
+    // }
+    // fetchData();
   }, []);
 
   useEffect(() => {

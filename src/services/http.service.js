@@ -41,7 +41,6 @@ class HttpClient {
   }
 
   handleErrors(res) {
-    store.dispatch(setLoadingAction({ isLoading: false }));
     if (!res) {
       store.dispatch(
         setLoadingAction({
