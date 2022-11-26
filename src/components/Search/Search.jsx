@@ -4,8 +4,8 @@ import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
 import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
 import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
 import { setSearchTypingAction } from '../../reducers/search.reducer';
-import { search } from '../../services';
-import musicService from '../../services/music.service';
+import { searchService } from '../../services/search.service';
+import { musicService } from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
 import './Search.scss';
@@ -83,7 +83,7 @@ function Search() {
     if (!searchKey) return;
     setNumberOrder(0);
     setItemsPerPage(1);
-    const response = await search(searchKey);
+    const response = await searchService.search(searchKey);
     setSearchState(response);
     // if (typing.current) clearTimeout(typing.current);
     // typing.current = setTimeout(async() => {
@@ -116,16 +116,15 @@ function Search() {
   };
 
   const next = async () => {
-    const response = await search(searchKey, nextPageToken);
+    const response = await searchService.search(searchKey, nextPageToken);
     setNumberOrder(numberOrder + 1);
     setSearchState(response);
   };
 
   const prev = async () => {
     if (numberOrder === 0) return;
-    const response = await search(searchKey, prevPageToken);
+    const response = await searchService.search(searchKey, prevPageToken);
     setNumberOrder(numberOrder - 1);
-    console.log(response);
     setSearchState(response);
   };
 

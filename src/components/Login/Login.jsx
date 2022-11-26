@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { RiNeteaseCloudMusicLine } from 'react-icons/ri';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
-import authService from '../../services/auth.service';
+import { authService } from '../../services/auth.service';
 import Loading from '../Loading/Loading';
 import './Login.scss';
 function Login() {

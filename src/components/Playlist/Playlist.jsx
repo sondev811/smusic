@@ -5,7 +5,7 @@ import { CgPlayListRemove } from 'react-icons/cg';
 import { toast } from "react-toastify";
 import { playlistStore, useAppDispatch, useAppSelector, userStore } from '../../hooks';
 import { setPlaylistAction } from '../../reducers/queue.reducer';
-import musicService from '../../services/music.service';
+import { musicService } from '../../services/music.service';
 import './Playlist.scss';
 
 function Playlist() {

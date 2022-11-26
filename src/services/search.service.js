@@ -1,10 +1,7 @@
-import http from './http.service';
+import { httpClient } from './http.service';
 import { api } from '../constants/api.constant';
 
-export const search = async (key, pageToken = '') => {
-  return http.get(api.search, { key, pageToken }, true, 'Đang tìm kiếm...');
-};
-
-export const getTrending = async (pageToken = '') => {
-  return http.get(api.getYoutubeTrending, { pageToken });
-};
+export const searchService = {
+  search: (key, pageToken = '') => httpClient.get(api.search, { key, pageToken }, true, 'Đang tìm kiếm...'),
+  getTrending: (pageToken = '') => httpClient.get(api.getYoutubeTrending, { pageToken })
+}

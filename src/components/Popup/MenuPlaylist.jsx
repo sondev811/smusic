@@ -1,6 +1,6 @@
 import React from 'react';
 import { playlistStore, useAppSelector, userStore } from '../../hooks';
-import musicService from '../../services/music.service';
+import { musicService } from '../../services/music.service';
 import "./Popup.scss";
 function MenuPlaylist(props) {
   const { contentMenuStyle, openPlaylist, menuPlaylist, musicInfo, playNow } = props;

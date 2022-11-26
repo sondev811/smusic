@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
 import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
-import { getTrending } from '../../services';
-import musicService from '../../services/music.service';
+import { searchService } from '../../services/search.service';
+import { musicService } from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
 import './Home.scss';
@@ -36,7 +36,7 @@ function Home() {
   useEffect(() => {
     // C1: tách nhỏ từng function => dễ debug
     const getTrendingYoutube = async () => {
-      const response = await getTrending();
+      const response = await searchService.getTrending();
       setSearchState(response);
     };
     const getPlaylist = async () => {
@@ -172,13 +172,13 @@ function Home() {
   }
 
   const prev = async () => {
-    const response = await getTrending(prevPageToken);
+    const response = await searchService.getTrending(prevPageToken);
     setNumberOrder(numberOrder - 1);
     setSearchState(response);
   };
 
   const next = async () => {
-    const response = await getTrending(nextPageToken);
+    const response = await searchService.getTrending(nextPageToken);
     setNumberOrder(numberOrder + 1);
     setSearchState(response);
   };

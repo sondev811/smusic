@@ -5,9 +5,9 @@ import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useOutside } from '../../hooks';
 import { setPlaylistAction } from '../../reducers/queue.reducer';
 import { setUserAction } from '../../reducers/user.reducer';
-import authService from '../../services/auth.service';
-import musicService from '../../services/music.service';
-import userService from '../../services/user.service';
+import { authService } from '../../services/auth.service';
+import { musicService } from '../../services/music.service';
+import { userService } from '../../services/user.service';
 import './User.scss';
 
 function User() {

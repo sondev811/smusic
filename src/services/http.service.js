@@ -1,18 +1,18 @@
 import axios from 'axios';
 import store from '../store';
 import { http } from '../constants/api.constant';
-import authService from './auth.service';
+import { authService } from './auth.service';
 import { setLoadingAction, setLoadingDoneAction } from '../reducers/loading.reducer';
 
-class HttpClient {
-  timeout(ms) {
+export const httpClient = {
+  timeout: (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  },
 
   getUrl(url, params) {
     const urlWithParams = this.handleParams(params);
     return `${http.url}${url}${urlWithParams}`;
-  }
+  },
 
   handleParams(params) {
     let urlWithParams = '';
@@ -29,7 +29,7 @@ class HttpClient {
       urlWithParams += `${item}=${values[index]}`;
     });
     return urlWithParams;
-  }
+  },
 
   getHeader() {
     const token = authService.getLocalStorage('token');
@@ -38,7 +38,7 @@ class HttpClient {
       Authorization: `Bearer ${token}`
     };
     return headers;
-  }
+  },
 
   handleErrors(res) {
     if (!res) {
@@ -60,7 +60,7 @@ class HttpClient {
       status: false,
       data: res.data.error
     };
-  }
+  },
 
   async handleSuccess(res) {
     store.dispatch(setLoadingDoneAction());
@@ -75,7 +75,7 @@ class HttpClient {
       status: true,
       result: res.data.result
     };
-  }
+  },
 
   async get(url, params = {}, isLoading = true, loadingContent='') {
     try {
@@ -91,7 +91,7 @@ class HttpClient {
     } catch (error) {
       return this.handleErrors(error.response);
     }
-  }
+  },
 
   async post(url, body, isLoading = false, loadingContent = '') {
     try {
@@ -110,5 +110,3 @@ class HttpClient {
     }
   }
 }
-
-export default new HttpClient();

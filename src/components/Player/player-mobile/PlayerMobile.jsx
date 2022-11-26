@@ -23,7 +23,7 @@ import {
 } from '../../../hooks';
 import { setVolumeAction } from '../../../reducers/player.reducer';
 import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
-import musicService from '../../../services/music.service';
+import { musicService } from '../../../services/music.service';
 import Queue from '../../Queue/Queue';
 import { toast } from "react-toastify";
 import '../Player.scss';
@@ -89,9 +89,6 @@ const PlayerDesktop = () => {
       const response = await musicService.getMusicUrl(currentMusic.youtubeId);
       if (!response || !response.result || !response.result.url) return;
       setMusicUrl(response.result.url);
-      console.log(response.result.type, 'type');
-      console.log(response.result.quality, 'quality');
-      console.log(response.result.url, 'url');
     };
     getMusicUrl();
   }, [currentMusic]);
@@ -167,16 +164,10 @@ const PlayerDesktop = () => {
     const setDuration = () => {
       if (!player || !player.duration) return;
       let handleDuration = musicPlayer.current.duration;
-      console.log(handleDuration, 'before handle');
       if (isiOSSystem()) {
-        console.log('iOS');
         handleDuration = handleDuration / 2;
       }
-      console.log('----loadeddata----');
-      console.log(handleDuration, 'total duration');
       const duration = formatDuration(handleDuration);
-      console.log(duration.minutes, typeof duration.minutes, 'minutes');
-      console.log(duration.seconds, typeof duration.seconds ,'seconds');
       totalDuration.current.innerHTML = `${duration.minutes}:${duration.seconds}`;
     };
 
@@ -227,7 +218,10 @@ const PlayerDesktop = () => {
     };
 
     const error = (e) => {
-      toast.error(errObj[e.currentTarget.error.code])
+      toast.error(errObj[e.currentTarget.error.code]);
+      setTimeout(() => {
+        ended();
+      }, 5000);
     };
 
     const errObj = {

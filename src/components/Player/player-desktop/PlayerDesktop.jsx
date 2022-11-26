@@ -23,7 +23,7 @@ import {
 } from '../../../hooks';
 import { setVolumeAction } from '../../../reducers/player.reducer';
 import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
-import musicService from '../../../services/music.service';
+import { musicService } from '../../../services/music.service';
 import '../Player.scss';
 
 const PlayerDesktop = () => {
@@ -200,6 +200,9 @@ const PlayerDesktop = () => {
 
     const error = () => {
       toast.error('Không thể tải bài hát. Hãy fresh lại trang web!!!');
+      setTimeout(() => {
+        ended();
+      }, 5000);
     };
 
     const volumeChange = () => {

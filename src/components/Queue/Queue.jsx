@@ -11,7 +11,7 @@ import {
   useAppSelector
 } from '../../hooks';
 import { setCurrentMusicAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
-import musicService from '../../services/music.service';
+import { musicService } from '../../services/music.service';
 import './Queue.scss';
 
 function Queue({ closeQueue }) {

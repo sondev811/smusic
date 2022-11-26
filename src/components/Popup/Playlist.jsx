@@ -1,6 +1,6 @@
 import React from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import musicService from '../../services/music.service';
+import { musicService } from '../../services/music.service';
 import { toast } from "react-toastify";
 import "./Popup.scss";
 

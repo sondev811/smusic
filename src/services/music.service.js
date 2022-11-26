@@ -1,48 +1,26 @@
-import http from './http.service';
+import { httpClient } from './http.service';
 import { api } from '../constants/api.constant';
-class MusicService {
-  getMusic(id) {
-    return http.get(api.getMusic, { id });
-  }
 
-  getPlaylist(isLoading = true) {
-    return http.get(api.getPlaylist, {}, isLoading);
-  }
+export const musicService = {
+  getMusic: (id) => httpClient.get(api.getMusic, { id }),
 
-  createPlaylist(playlistName) {
-    return http.post(api.createPlaylist, { playlistName }, true)
-  }
+  getPlaylist: (isLoading = true) => httpClient.get(api.getPlaylist, {}, isLoading),
 
-  removePlaylist(playlistId) {
-    return http.get(api.removePlaylist, {playlistId});
-  }
+  createPlaylist: (playlistName) => httpClient.post(api.createPlaylist, { playlistName }, true),
 
-  updateCurrentPlaylist(playlistId, isLoading = true) {
-    return http.get(api.updateCurrentPlaylist, {playlistId}, isLoading);
-  }
+  removePlaylist: (playlistId) => httpClient.get(api.removePlaylist, {playlistId}),
 
-  getSongsPlaylist(playlistId) {
-    return http.get(api.getSongsPlaylist, {playlistId});
-  }
+  updateCurrentPlaylist: (playlistId, isLoading = true) => httpClient.get(api.updateCurrentPlaylist, {playlistId}, isLoading),
 
-  insertSongPlaylist(playlistId, id, isLoading = true) {
-    return http.get(api.insertSongPlaylist, {playlistId, id}, isLoading);
-  }
+  getSongsPlaylist: (playlistId) => httpClient.get(api.getSongsPlaylist, {playlistId}),
 
-  getMusicUrl(id) {
-    return http.get(api.stream, { id });
-  }
+  insertSongPlaylist: (playlistId, id, isLoading = true) => httpClient.get(api.insertSongPlaylist, {playlistId, id}, isLoading),
 
-  updateCurrentMusic(youtubeId, playlistId, isLoading = true) {
-    return http.get(api.updateCurrentMusic, { youtubeId, playlistId }, isLoading);
-  }
+  getMusicUrl: (id) => httpClient.get(api.stream, { id }),
 
-  removeItemPlaylist(musicId, playlistId) {
-    return http.get(api.removeItemPlaylist, { musicId, playlistId });
-  }
+  updateCurrentMusic: (youtubeId, playlistId, isLoading = true) => httpClient.get(api.updateCurrentMusic, { youtubeId, playlistId }, isLoading),
 
-  updateQueueList(body) {
-    return http.post(api.updateQueueList, body);
-  }
+  removeItemPlaylist: (musicId, playlistId) => httpClient.get(api.removeItemPlaylist, { musicId, playlistId }),
+
+  updateQueueList: (body) => httpClient.post(api.updateQueueList, body)
 }
-export default new MusicService();

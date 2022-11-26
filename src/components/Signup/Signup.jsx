@@ -3,7 +3,7 @@ import { RiNeteaseCloudMusicLine } from 'react-icons/ri';
 import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { setLoadingAction, setLoadingDoneAction } from '../../reducers/loading.reducer';
-import authService from '../../services/auth.service';
+import { authService } from '../../services/auth.service';
 import Loading from '../Loading/Loading';
 import './Signup.scss';
 

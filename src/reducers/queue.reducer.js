@@ -27,6 +27,12 @@ const queueReducer = createSlice({
   }
 });
 
+// export const updateCurrentMusicThunk = createAsyncThunk('queue/updateCurrentMusic', async(music, playlist) => {
+//   const result = await musicService.updateCurrentMusic(music.youtubeId, playlist.playlistId);
+//   if (!result || !result.status) return;
+//   return result;
+// })
+
 const {actions, reducer} = queueReducer;
 export const { 
   setPlaylistAction, 
