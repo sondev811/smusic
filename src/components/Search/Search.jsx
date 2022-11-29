@@ -8,7 +8,7 @@ import { searchService } from '../../services/search.service';
 import { musicService } from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
-import { decodeHtmlEntity } from '../../utils/general';
+import { decodeHtmlEntity, removeAccents } from '../../utils/general';
 import './Search.scss';
 function Search() {
   const [searchKey, setSearchKey] = useState('');
@@ -89,7 +89,7 @@ function Search() {
         setHistories(searchHistory)
         return;
       };
-      const response = await searchService.getSearchRecommend(searchKey);
+      const response = await searchService.getSearchRecommend(removeAccents(searchKey));
       if (!response || !response.result || !response.result.length) setHistories(['Không tìm thấy gợi ý phù hợp'])
       setSearchData([]);
       setHistories(response.result.map(element => decodeHtmlEntity(element)));
