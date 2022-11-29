@@ -14,7 +14,9 @@ export const api = {
   removeItemPlaylist: 'removeItemPlaylist',
   getYoutubeTrending: 'getYoutubeTrending',
   updateQueueList: 'updateQueueList',
-  stream: 'stream'
+  stream: 'stream',
+  getSearchHistory: 'getSearchHistory',
+  searchRecommend: 'searchRecommend'
 };
 
 export const http = {

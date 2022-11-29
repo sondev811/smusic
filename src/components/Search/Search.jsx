@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { BiSearch } from 'react-icons/bi';
 import { BsChevronLeft, BsChevronRight, BsXLg } from 'react-icons/bs';
-import { playlistStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
+import { playlistStore, searchHistoryStore, searchTypingStore, useAppDispatch, useAppSelector, useOutside } from '../../hooks';
 import { setPlaylistAction, setSongsPlaylistAction } from '../../reducers/queue.reducer';
-import { setSearchTypingAction } from '../../reducers/search.reducer';
+import { setSearchHistory, setSearchTypingAction } from '../../reducers/search.reducer';
 import { searchService } from '../../services/search.service';
 import { musicService } from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
+import { decodeHtmlEntity } from '../../utils/general';
 import './Search.scss';
 function Search() {
   const [searchKey, setSearchKey] = useState('');
@@ -33,6 +34,9 @@ function Search() {
   const [playlist, setPlaylist] = useState([]);
   const dispatch = useAppDispatch();
   const queue = useAppSelector(playlistStore);
+  const [histories, setHistories] = useState([]);
+  const searchHistory = useAppSelector(searchHistoryStore);
+  const isTyping = useAppSelector(searchTypingStore);
 
   useEffect(() => {
     let timeOutSetHeight = null;
@@ -66,11 +70,11 @@ function Search() {
       }, 2000);
     };
     const getPlaylist = async () => {
-      const loading = false;
-      let response = await musicService.getPlaylist(loading);
+      const response = await musicService.getPlaylist(false);
       if (!response || !response.result || !response.result.playlist) return;
       setPlaylist(response.result.playlist);
     };
+    getSearchHistory();
     setHeightSearch();
     getPlaylist();
     return () => {
@@ -78,22 +82,52 @@ function Search() {
       clearInterval(timeIntervalHeight);
     };
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(async() => {
+      if (!searchKey || !isTyping) {
+        setHistories(searchHistory)
+        return;
+      };
+      const response = await searchService.getSearchRecommend(searchKey);
+      if (!response || !response.result || !response.result.length) setHistories(['Không tìm thấy gợi ý phù hợp'])
+      setSearchData([]);
+      setHistories(response.result.map(element => decodeHtmlEntity(element)));
+    }, 200);
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [searchKey]);
+
+  const getSearchHistory = async () => {
+    const response = await searchService.getSearchHistory();
+    if (!response || !response.result || !response.result.list) return;
+    setHistories(response.result.list);
+    dispatch(setSearchHistory(response.result.list));
+  }
+
   const onSearch = async (event) => {
     event.preventDefault();
     if (!searchKey) return;
+    executeSearch(searchKey);
+  };
+
+  const onSearchByClick = async (searchKey) => {
+    setSearchKey(searchKey);
+    executeSearch(searchKey);
+  }
+  
+  const executeSearch = async (searchKey) => {
     setNumberOrder(0);
     setItemsPerPage(1);
     const response = await searchService.search(searchKey);
     setSearchState(response);
-    // if (typing.current) clearTimeout(typing.current);
-    // typing.current = setTimeout(async() => {
-    //
-    // }, 500);
-  };
+    getSearchHistory();
+  }
 
   const searchKeyChange = (event) => {
     setSearchKey(event.target.value);
-  };
+  }
 
   const setSearchState = (response) => {
     if (
@@ -135,6 +169,7 @@ function Search() {
     setPrevPageToken('');
     setNumberOrder(0);
     setItemsPerPage(1);
+    setHistories(searchHistory);
   };
 
   const formatNumber = (number) => {
@@ -272,7 +307,7 @@ function Search() {
         </div>
       </div>
       <div className="search__list">
-        {searchData &&
+        { searchData &&
           searchData.map((element, i) => {
             return (
               <div
@@ -299,7 +334,22 @@ function Search() {
                 </div>
               </div>
             );
-          })}
+          })
+        }
+        { !searchData.length && histories && histories.length ? 
+          (
+            <div className='search__list--history'>
+              <h4>{searchKey ? `Gợi ý tìm kiếm` : `Lịch sử tìm kiếm`}</h4>
+                {               
+                  histories.map((element, index) => {
+                      return(
+                        <div key={index} onClick={() => onSearchByClick(element)}> {element} </div>
+                      )
+                  })
+                }            
+            </div>
+          ) 
+        : null }
       </div>
       { isOpenMenu && <MenuPlaylist menuPlaylist={menuPlaylist} contentMenuStyle={contentMenuStyle} 
         openPlaylist={openPlaylist} musicInfo={songInfoActive} playNow={playNow}/>}

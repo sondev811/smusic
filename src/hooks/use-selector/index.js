@@ -6,4 +6,5 @@ export const loadingStore = (state) => state.loading.loadingCount;
 export const loadingContentStore = (state) => state.loading.content;
 export const playerStore = (state) => state.player.volume;
 export const searchTypingStore = (state) => state.search.isTyping;
+export const searchHistoryStore = (state) => state.search.searchHistory;
 export const userStore = (state) => state.user;

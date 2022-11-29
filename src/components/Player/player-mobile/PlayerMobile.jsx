@@ -83,6 +83,8 @@ const PlayerDesktop = () => {
 
   useEventListener('keydown', handlePressSpace);
 
+  queuesListRef.current = queuesList;
+
   useEffect(() => {
     const getMusicUrl = async () => {
       if (!currentMusic || !currentMusic.youtubeId) return;
@@ -279,10 +281,6 @@ const PlayerDesktop = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [musicUrl]);
-
-  useEffect(() => {
-    queuesListRef.current = queuesList;
-  }, [queuesList]);
 
   useEffect(() => {
     const checkNextPrev = () => {
