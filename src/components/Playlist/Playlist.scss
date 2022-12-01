@@ -105,7 +105,6 @@
                 margin-bottom: 5px;
             }
             margin-bottom: 15px;
-            cursor: pointer;
             &:hover {
                 background: #181818;
                 .queue__list--item--name  {
@@ -161,68 +160,49 @@
         &--item {
           padding: .5rem 0;
           width: 100%;
-            @include flex(center, left);
-            &--name {
-                transition: .3s all;
-                div:first-child {
-                    margin-bottom: 3px;
-                    @include mobile {
-                        text-overflow: ellipsis;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        width: 165px;
-                    }
-                }
-                div:last-child {
-                    font-size: 14px;;
-                }
-            }
-            &--icon {
-                @include flex(center, center);
-                img {
-                    display: none;
-                    width: 16px;
-                }
-                span:first-child {
-                    @include mobile {
-                        display: none;
-                    }
-                    cursor: grab;
-                    svg {
-                        color: #fff!important;
-                    }
-                    padding-right: 1.5rem;
-                }
-                span {
-                    @include flex(center, center);
-                }
-                svg {
-                    font-size: 22px;
-                    transition: .3s all;
-                    &:hover {
-                        color: #1db954;
-                    }
-                }
-            }
-            &--thumb {
-                padding: 0!important;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                height: 70px;
-                img {
-                    width: 80px;
-                    @include mobile {
-                        width: 70px;
-                    }
-                }
-            }
-            &>div {
-                @include mobile {
-                    padding: 0 .8rem;
-                }
-                padding: 0 1.5rem;
-            }
+          @include flex(center, left);
+          transition: .3s all;
+          &--name {
+              transition: .3s all;
+              div:first-child {
+                  margin-bottom: 3px;
+                  @include mobile {
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      width: 165px;
+                  }
+              }
+              div:last-child {
+                  font-size: 14px;;
+              }
+          }
+          &--thumb {
+              padding: 0!important;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              height: 70px;
+              img {
+                  width: 80px;
+                  @include mobile {
+                      width: 70px;
+                  }
+              }
+          }
+          &>div {
+              @include mobile {
+                  padding: 0 .8rem;
+              }
+              cursor: pointer;
+              padding: 0 1.5rem;
+          }
+          img {
+            display: none;
+          }
+          &:hover {
+            color: #1db954;
+          }
         }
         .active-item {
             background-color: rgba(255,255,255,.1);
@@ -243,7 +223,7 @@
             }
             .image-play {
                 display: block;
-                padding-left: .4rem;
+                padding-left: 1rem;
             }
           
         }

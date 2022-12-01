@@ -6,7 +6,9 @@ import { toast } from "react-toastify";
 import { playlistStore, useAppDispatch, useAppSelector, userStore } from '../../hooks';
 import { setPlaylistAction } from '../../reducers/queue.reducer';
 import { musicService } from '../../services/music.service';
+import { BsFillPlayFill } from 'react-icons/bs';
 import './Playlist.scss';
+import { useNavigate } from 'react-router-dom';
 
 function Playlist() {
   const queues = useAppSelector(playlistStore);
@@ -15,6 +17,8 @@ function Playlist() {
   const [playlist, setPlaylist] = useState([]);
   const [isAddPlaylist, setIsAddPlaylist] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
+  let navigate = useNavigate();
+
   useEffect(() => {
     getPlaylist();
   }, []);
@@ -105,6 +109,10 @@ function Playlist() {
     setIsAddPlaylist(true)
   }, [])
 
+  const showPlaylist = (id) => {
+    navigate(`/playlist/${id}`);
+  }
+
   return (
     <div className="playlist">
       <div className="playlist__header">
@@ -122,9 +130,24 @@ function Playlist() {
           playlist.map((element, i) => {
             return (
               <div key={i} className={ queues && queues.playlistId && 
-                queues.playlistId === element._id ? 'playing' : ''}>
-                <div className={`playlist__list--item `} onClick={() => getSongFromPlaylist(element)}>
-                  <div>{element.playlistName}({element.list.length})</div>
+                queues.playlistId === element._id ? 'playing' : ''} 
+              >
+                <div className={`playlist__list--item `}>
+                  <span>
+                    <BsFillPlayFill
+                      className="play-icon"
+                      onClick={() => getSongFromPlaylist(element)}
+                    />
+                    <img
+                      className="image-play"
+                      src={
+                        process.env.PUBLIC_URL +
+                        'equaliser-animated-green.f93a2ef4.gif'
+                      }
+                      alt="play-icon"
+                    />
+                  </span>
+                  <div onClick={() => showPlaylist(element._id)} >{element.playlistName}({element.list.length})</div>
                 </div>
                 <div className={`playlist__list--remove ${user && 
                   user.queueListId && user.queueListId === element._id ? 'disable-delete' : ''}`}>

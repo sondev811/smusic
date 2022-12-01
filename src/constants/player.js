@@ -16,3 +16,9 @@ export const colors = [
   'rgba(0,31,36, .9)',
   'rgba(55, 31, 118, .9)'
 ];
+
+export const devices = {
+  apple: 'apple',
+  android: 'android',
+  unknown: 'unknown'
+}

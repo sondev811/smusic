@@ -6,6 +6,8 @@ export const musicService = {
 
   getPlaylist: (isLoading = true) => httpClient.get(api.getPlaylist, {}, isLoading),
 
+  getPlaylistById: (playlistId, isLoading = true) =>  httpClient.get(api.getPlaylistById, { playlistId }, isLoading),
+
   createPlaylist: (playlistName) => httpClient.post(api.createPlaylist, { playlistName }, true),
 
   removePlaylist: (playlistId) => httpClient.get(api.removePlaylist, {playlistId}),
@@ -16,7 +18,7 @@ export const musicService = {
 
   insertSongPlaylist: (playlistId, id, isLoading = true) => httpClient.get(api.insertSongPlaylist, {playlistId, id}, isLoading),
 
-  getMusicUrl: (id) => httpClient.get(api.stream, { id }),
+  getMusicUrl: (id, device) => httpClient.get(api.stream, { id, device }),
 
   updateCurrentMusic: (youtubeId, playlistId, isLoading = true) => httpClient.get(api.updateCurrentMusic, { youtubeId, playlistId }, isLoading),
 

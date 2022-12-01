@@ -9,7 +9,7 @@ import {
   BsPauseFill
 } from 'react-icons/bs';
 import { MdOutlineRepeat, MdOutlineRepeatOne } from 'react-icons/md';
-import { colors, LoopType } from '../../../constants/player';
+import { colors, devices, LoopType } from '../../../constants/player';
 import {
   currentMusicStore,
   playerStore,
@@ -27,6 +27,7 @@ import { musicService } from '../../../services/music.service';
 import Queue from '../../Queue/Queue';
 import { toast } from "react-toastify";
 import '../Player.scss';
+import { detectDevice } from '../../../utils/general';
 
 const PlayerDesktop = () => {
   const musicPlayer = useRef(null);
@@ -88,7 +89,8 @@ const PlayerDesktop = () => {
   useEffect(() => {
     const getMusicUrl = async () => {
       if (!currentMusic || !currentMusic.youtubeId) return;
-      const response = await musicService.getMusicUrl(currentMusic.youtubeId);
+      const device = detectDevice();
+      const response = await musicService.getMusicUrl(currentMusic.youtubeId, device);
       if (!response || !response.result || !response.result.url) return;
       setMusicUrl(response.result.url);
     };
@@ -166,7 +168,8 @@ const PlayerDesktop = () => {
     const setDuration = () => {
       if (!player || !player.duration) return;
       let handleDuration = musicPlayer.current.duration;
-      if (isiOSSystem()) {
+      const device = detectDevice();
+      if (device === devices.apple) {
         handleDuration = handleDuration / 2;
       }
       const duration = formatDuration(handleDuration);
@@ -186,7 +189,8 @@ const PlayerDesktop = () => {
       minuteDom.innerHTML = minutes;
       secondDom.innerHTML = seconds;
       let duration = player.duration;
-      if (isiOSSystem()) {
+      const device = detectDevice();
+      if (device === devices.apple) {
         duration = duration / 2;
       }
       const percentage = Math.floor(
@@ -198,7 +202,7 @@ const PlayerDesktop = () => {
       if (playbackProgressMobile && playbackProgressMobile.current) {
         playbackProgressMobile.current.style.width = percentage + '%';
       }
-      if (isiOSSystem() && player.currentTime >= duration) {
+      if (device === devices.apple && player.currentTime >= duration) {
         ended();
         return;
       }
@@ -310,11 +314,6 @@ const PlayerDesktop = () => {
     return { minutes, seconds };
   };
 
-  const isiOSSystem = () => {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    return /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-  }
-
   const handleProgressBar = (event) => {
     const player = musicPlayer.current;
     const progress = progressBar.current;
@@ -327,7 +326,8 @@ const PlayerDesktop = () => {
     )
       return;
     let duration = player.duration;
-    if (isiOSSystem()) {
+    const device = detectDevice();
+    if (device === devices.apple) {
       duration = duration / 2;
     }
     const position = event.clientX - progress.getBoundingClientRect().left;

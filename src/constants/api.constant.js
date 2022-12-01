@@ -5,6 +5,7 @@ export const api = {
   getUserInfo: 'getUserInfo',
   search: 'search',
   getPlaylist: 'getPlaylist',
+  getPlaylistById: 'getPlaylistById',
   createPlaylist: 'createPlaylist',
   removePlaylist: 'removePlaylist',
   updateCurrentPlaylist: 'updateCurrentPlaylist',

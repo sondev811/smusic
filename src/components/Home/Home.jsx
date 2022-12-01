@@ -7,6 +7,7 @@ import { musicService } from '../../services/music.service';
 import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
 import './Home.scss';
+import ListItem from '../ListItem/ListItem';
 
 function Home() {
   const [trendingData, setTrendingData] = useState([]);
@@ -247,34 +248,14 @@ function Home() {
         </div>
       </div>
       <div id="trending-list" style={{position: 'relative'}} className="trending__list" ref={trendingList}>
-        {trendingData &&
-          trendingData.map((element, i) => {
-            return (
-              <div
-                className={`trending__list--item ${songInfoActive && songInfoActive.id === element.id ? 'active-click' : ''}`}
-                key={i}
-                onClick={(event) => addQueueList(event, element)}
-              >
-                <div>
-                  <div className="trending__list--item--icon">
-                    {numberOrder > 0
-                      ? formatNumber(numberOrder * itemsPerPage + i + 1)
-                      : formatNumber(i + 1)}
-                  </div>
-                  <div className="trending__list--item--thumb">
-                    <img
-                      src={element.snippet.thumbnails.high.url}
-                      alt={element.snippet.channelTitle}
-                    />
-                  </div>
-                  <div className="trending__list--item--name">
-                    <div>{element.snippet.title}</div>
-                    <div>{element.snippet.channelTitle}</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+        <ListItem 
+          listData = {trendingData} 
+          songInfoActive = {songInfoActive} 
+          addQueueList = {addQueueList} 
+          formatNumber= {formatNumber} 
+          numberOrder = {numberOrder} 
+          itemsPerPage = {itemsPerPage}
+        />
       </div>
       { isOpenMenu && <MenuPlaylist menuPlaylist={menuPlaylist} contentMenuStyle={contentMenuStyle} 
         openPlaylist={openPlaylist} musicInfo={songInfoActive} playNow={playNow}/>}

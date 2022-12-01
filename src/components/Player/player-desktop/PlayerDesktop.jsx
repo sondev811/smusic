@@ -24,6 +24,7 @@ import {
 import { setVolumeAction } from '../../../reducers/player.reducer';
 import { setCurrentMusicAction } from '../../../reducers/queue.reducer';
 import { musicService } from '../../../services/music.service';
+import { detectDevice } from '../../../utils/general';
 import '../Player.scss';
 
 const PlayerDesktop = () => {
@@ -78,7 +79,8 @@ const PlayerDesktop = () => {
   useEffect(() => {
     const getMusicUrl = async () => {
       if (!currentMusic || !currentMusic.youtubeId) return;
-      const response = await musicService.getMusicUrl(currentMusic.youtubeId);
+      const device = detectDevice();
+      const response = await musicService.getMusicUrl(currentMusic.youtubeId, device);
       if (!response || !response.result || !response.result.url) {
         toast.error('Bài hát đã bị xóa khỏi youtube. Hãy xóa bài hát khỏi playlist của bạn!!!');
         return;

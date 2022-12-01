@@ -10,6 +10,7 @@ import MenuPlaylist from '../Popup/MenuPlaylist';
 import Playlist from '../Popup/Playlist';
 import { decodeHtmlEntity, removeAccents } from '../../utils/general';
 import './Search.scss';
+import ListItem from '../ListItem/ListItem';
 function Search() {
   const [searchKey, setSearchKey] = useState('');
   const [searchData, setSearchData] = useState([]);
@@ -307,35 +308,14 @@ function Search() {
         </div>
       </div>
       <div className="search__list">
-        { searchData &&
-          searchData.map((element, i) => {
-            return (
-              <div
-                className={`search__list--item ${songInfoActive && songInfoActive.id === element.id ? 'active-click' : ''}`}
-                key={i}
-                onClick={(event) => addQueueList(event, element)}
-              >
-                <div>
-                  <div className="search__list--item--icon">
-                    {numberOrder > 0
-                      ? formatNumber(numberOrder * itemsPerPage + i + 1)
-                      : formatNumber(i + 1)}
-                  </div>
-                  <div className="search__list--item--thumb">
-                    <img
-                      src={element.snippet.thumbnails.high.url}
-                      alt={element.snippet.channelTitle}
-                    />
-                  </div>
-                  <div className="search__list--item--name">
-                    <div>{element.snippet.title}</div>
-                    <div>{element.snippet.channelTitle}</div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-        }
+        <ListItem 
+          listData = {searchData} 
+          songInfoActive = {songInfoActive} 
+          addQueueList = {addQueueList} 
+          formatNumber={formatNumber} 
+          numberOrder = {numberOrder} 
+          itemsPerPage = {itemsPerPage}
+        />
         { !searchData.length && histories && histories.length ? 
           (
             <div className='search__list--history'>
