@@ -162,6 +162,7 @@
           width: 100%;
           @include flex(center, left);
           transition: .3s all;
+          cursor: pointer;
           &--name {
               transition: .3s all;
               div:first-child {
@@ -194,7 +195,6 @@
               @include mobile {
                   padding: 0 .8rem;
               }
-              cursor: pointer;
               padding: 0 1.5rem;
           }
           img {

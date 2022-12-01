@@ -128,6 +128,7 @@ function PlaylistDetail(props) {
 
   return (
     <div className='playlist-detail'>
+      { playlist ? 
       <div>
         <div className='playlist-detail__info' style={{background: 'rgb(14, 23, 30)'}} >
           <div style={{ background: `linear-gradient(to bottom, ${color} 0%, ${colorBlending} 33%, rgba(15,15,15,1.000) 100%)` }}>
@@ -147,12 +148,6 @@ function PlaylistDetail(props) {
             </div>
           </div>
         </div>
-        {/* <div className="playlist-detail__info-mobile">
-          <h3><span>{ playlist?.playlistName }</span><span>({ playlist?.list?.length || 0 })</span></h3>
-          <button onClick={() => playAll(playlist)} className={`${playlist?._id === queues?.playlistId ? 'disable' : ''}`}>
-            { playlist?._id === queues?.playlistId ? 'Playing' : 'Play all'}
-          </button>
-        </div> */}
         <div className='playlist-detail__list'>
           <ListItem 
             listData = {playlist?.list || []} 
@@ -164,6 +159,7 @@ function PlaylistDetail(props) {
           />
         </div>
       </div>
+      : null } 
     </div>
   );
 }

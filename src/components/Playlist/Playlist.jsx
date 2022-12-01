@@ -109,7 +109,10 @@ function Playlist() {
     setIsAddPlaylist(true)
   }, [])
 
-  const showPlaylist = (id) => {
+  const showPlaylist = (event, id) => {
+    console.log(event.target);
+    console.log(event.currentTarget);
+    if (event.target !== event.currentTarget) return;
     navigate(`/playlist/${id}`);
   }
 
@@ -130,9 +133,9 @@ function Playlist() {
           playlist.map((element, i) => {
             return (
               <div key={i} className={ queues && queues.playlistId && 
-                queues.playlistId === element._id ? 'playing' : ''} 
+                queues.playlistId === element._id ? 'playing' : ''}
               >
-                <div className={`playlist__list--item `}>
+                <div className={`playlist__list--item `} onClick={(event) => showPlaylist(event, element._id)}>
                   <span>
                     <BsFillPlayFill
                       className="play-icon"
@@ -145,9 +148,10 @@ function Playlist() {
                         'equaliser-animated-green.f93a2ef4.gif'
                       }
                       alt="play-icon"
+                      onClick={(event) => showPlaylist(event, element._id)}
                     />
                   </span>
-                  <div onClick={() => showPlaylist(element._id)} >{element.playlistName}({element.list.length})</div>
+                  <div onClick={(event) => showPlaylist(event, element._id)}>{element.playlistName}({element.list.length})</div>
                 </div>
                 <div className={`playlist__list--remove ${user && 
                   user.queueListId && user.queueListId === element._id ? 'disable-delete' : ''}`}>
