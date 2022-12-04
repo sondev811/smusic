@@ -17,7 +17,8 @@ export const api = {
   updateQueueList: 'updateQueueList',
   stream: 'stream',
   getSearchHistory: 'getSearchHistory',
-  searchRecommend: 'searchRecommend'
+  searchRecommend: 'searchRecommend',
+  editPlaylistName: 'editPlaylistName'
 };
 
 export const http = {

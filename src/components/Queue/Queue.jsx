@@ -19,6 +19,7 @@ function Queue({ closeQueue }) {
   const playlist = useAppSelector(playlistStore);
   const currentMusic = useAppSelector(currentMusicStore);
   const dispatch = useAppDispatch();
+  
   useEffect(() => {
     const setHeightQueue = () => {
       const player = document.getElementsByClassName('player');

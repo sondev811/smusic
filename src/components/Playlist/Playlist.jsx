@@ -110,8 +110,6 @@ function Playlist() {
   }, [])
 
   const showPlaylist = (event, id) => {
-    console.log(event.target);
-    console.log(event.currentTarget);
     if (event.target !== event.currentTarget) return;
     navigate(`/playlist/${id}`);
   }
