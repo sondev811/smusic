@@ -9,6 +9,7 @@ import NotFound from './components/NotFound/NotFound';
 import Playlist from './components/Playlist/Playlist';
 import PlaylistDetail from './components/PlaylistDetails/PlaylistDetail';
 import Queue from './components/Queue/Queue';
+import ResetPassword from './components/ResetPassword/ResetPassword';
 import Search from './components/Search/Search';
 import Signup from './components/Signup/Signup';
 import './index.css';
@@ -29,6 +30,7 @@ ReactDOM.render(
         </Route>
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/login" element={<Login />} />
+        <Route exact path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Provider>

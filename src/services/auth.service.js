@@ -18,5 +18,7 @@ export const authService = {
 
   getLocalStorage: (name) => localStorage.getItem(name),
 
-  deleteLocalStorage: (name) => localStorage.removeItem(name)
+  deleteLocalStorage: (name) => localStorage.removeItem(name),
+
+  resetPassword: (body) => httpClient.post(api.resetPassword, body)
 }

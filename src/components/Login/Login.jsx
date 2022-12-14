@@ -49,7 +49,7 @@ function Login() {
       <div className="login__form">
         <form onSubmit={login}>
           <div className="login__form--items">
-            <label htmlFor="username">Email hoặc tên đăng nhập</label>
+            <label htmlFor="username">Email</label>
             <input
               data-testid="username"
               type="text"
@@ -80,6 +80,10 @@ function Login() {
       <div className="sign-up">
         <p>Chưa có tài khoản?</p>
         <NavLink to="/signup">Đăng ký</NavLink>
+      </div>
+      <div className="sign-up">
+        <p>Bạn quên mật khẩu?</p>
+        <NavLink to="/reset-password">Reset password</NavLink>
       </div>
       <Loading />
     </div>

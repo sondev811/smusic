@@ -18,7 +18,8 @@ export const api = {
   stream: 'stream',
   getSearchHistory: 'getSearchHistory',
   searchRecommend: 'searchRecommend',
-  editPlaylistName: 'editPlaylistName'
+  editPlaylistName: 'editPlaylistName',
+  resetPassword: 'resetPassword'
 };
 
 export const http = {

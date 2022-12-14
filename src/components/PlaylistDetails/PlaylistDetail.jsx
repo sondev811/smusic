@@ -29,7 +29,7 @@ function PlaylistDetail(props) {
 
   useEffect(() => {
     getPlayListDetail();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const setHeightQueue = () => {
