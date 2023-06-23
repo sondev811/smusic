@@ -1,21 +1,29 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './components/Home/Home';
-import Information from './components/Infomation/Information';
+// import Home from './components/Home/Home';
+// import Information from './components/Infomation/Information';
 import Login from './components/Login/Login';
 import NotFound from './components/NotFound/NotFound';
-import Playlist from './components/Playlist/Playlist';
-import PlaylistDetail from './components/PlaylistDetails/PlaylistDetail';
-import Queue from './components/Queue/Queue';
+// import Playlist from './components/Playlist/Playlist';
+// import PlaylistDetail from './components/PlaylistDetails/PlaylistDetail';
+// import Queue from './components/Queue/Queue';
 import ResetPassword from './components/ResetPassword/ResetPassword';
-import Search from './components/Search/Search';
+// import Search from './components/Search/Search';
 import Signup from './components/Signup/Signup';
 import './index.css';
 import PrivateRoute from './middleware/private.route';
 import reportWebVitals from './reportWebVitals';
 import store from './store';
+
+const Home = lazy(() => import('./components/Home/Home'));
+const Search = lazy(() => import('./components/Search/Search'));
+const Queue = lazy(() => import('./components/Queue/Queue'));
+const Playlist = lazy(() => import('./components/Playlist/Playlist'));
+const Information = lazy(() => import('./components/Infomation/Information'));
+const PlaylistDetail = lazy(() => import('./components/PlaylistDetails/PlaylistDetail'));
+
 ReactDOM.render(
   <BrowserRouter>
     <Provider store={store}>
