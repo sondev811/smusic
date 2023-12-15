@@ -21,11 +21,13 @@ export const httpClient = {
     if (!keys || !keys.length || !values || !values.length) {
       return urlWithParams;
     }
+    
     urlWithParams = '?';
     keys.forEach((item, index) => {
       if (index >= 1) {
         urlWithParams += '&';
-      }
+      } 
+      
       urlWithParams += `${item}=${values[index]}`;
     });
     return urlWithParams;
