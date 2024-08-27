@@ -23,8 +23,8 @@ export const api = {
 };
 
 export const http = {
-  url: 'https://139.180.136.77/api/'
-  // url: 'https://smusic-be.vercel.app/api/'
+  // url: 'https://139.180.136.77/api/'
+  url: 'https://smusic-be.vercel.app/api/'
   // url: 'https://smusic-be.herokuapp.com/api/'
   // url: 'http://localhost:3500/api/'
 };
